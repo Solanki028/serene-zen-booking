@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { MapPin, Phone, Clock, Mail } from "lucide-react";
 
 export const Footer = () => {
@@ -37,22 +37,22 @@ export const Footer = () => {
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/ourservices" className="opacity-90 hover:opacity-100 transition-opacity">
+                <Link href="/ourservices" className="opacity-90 hover:opacity-100 transition-opacity">
                   Our Services
                 </Link>
               </li>
               <li>
-                <Link to="/membership" className="opacity-90 hover:opacity-100 transition-opacity">
+                <Link href="/membership" className="opacity-90 hover:opacity-100 transition-opacity">
                   Membership
                 </Link>
               </li>
               <li>
-                <Link to="/giftvoucher" className="opacity-90 hover:opacity-100 transition-opacity">
+                <Link href="/giftvoucher" className="opacity-90 hover:opacity-100 transition-opacity">
                   Gift Vouchers
                 </Link>
               </li>
               <li>
-                <Link to="/aboutus" className="opacity-90 hover:opacity-100 transition-opacity">
+                <Link href="/aboutus" className="opacity-90 hover:opacity-100 transition-opacity">
                   About Us
                 </Link>
               </li>
@@ -89,10 +89,10 @@ export const Footer = () => {
               </a>
             </div>
             <div className="text-sm space-y-1">
-              <Link to="/privacypolicy" className="block opacity-90 hover:opacity-100 transition-opacity">
+              <Link href="/privacypolicy" className="block opacity-90 hover:opacity-100 transition-opacity">
                 Privacy Policy
               </Link>
-              <Link to="/termsandservice" className="block opacity-90 hover:opacity-100 transition-opacity">
+              <Link href="/termsandservice" className="block opacity-90 hover:opacity-100 transition-opacity">
                 Terms & Services
               </Link>
             </div>

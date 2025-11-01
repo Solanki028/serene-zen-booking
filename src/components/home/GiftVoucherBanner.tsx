@@ -1,5 +1,7 @@
+"use client";
+
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Gift, ArrowRight } from "lucide-react";
 
@@ -22,7 +24,7 @@ export const GiftVoucherBanner = () => {
           <p className="text-lg text-muted-foreground mb-8">
             Share the joy of relaxation with our customizable gift vouchers. Perfect for every occasion.
           </p>
-          <Link to="/giftvoucher">
+          <Link href="/giftvoucher">
             <Button size="lg" className="gap-2">
               Buy Gift Voucher
               <ArrowRight className="h-5 w-5" />

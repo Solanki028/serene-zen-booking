@@ -1,12 +1,15 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +41,7 @@ export const Navbar = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <div className="text-2xl font-serif font-bold text-primary">
               Aroma Thai Spa
             </div>
@@ -49,10 +52,10 @@ export const Navbar = () => {
             {navLinks.map((link) => (
               <Link
                 key={link.to}
-                to={link.to}
+                href={link.to}
                 className={`text-sm font-medium transition-colors hover:text-primary relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full ${
-                  location.pathname === link.to 
-                    ? "text-primary after:w-full" 
+                  pathname === link.to
+                    ? "text-primary after:w-full"
                     : "text-muted-foreground"
                 }`}
               >
@@ -87,11 +90,11 @@ export const Navbar = () => {
             {navLinks.map((link) => (
               <Link
                 key={link.to}
-                to={link.to}
+                href={link.to}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={`block py-2 text-base font-medium transition-colors ${
-                  location.pathname === link.to 
-                    ? "text-primary" 
+                  pathname === link.to
+                    ? "text-primary"
                     : "text-muted-foreground hover:text-primary"
                 }`}
               >
