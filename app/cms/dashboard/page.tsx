@@ -68,7 +68,7 @@ export default function CMSDashboard() {
               <LayoutDashboard className="h-8 w-8 text-primary" />
               <div>
                 <h1 className="text-2xl font-serif font-bold text-gray-900">
-                  Aroma Thai Spa CMS
+                  Velora Thai massage & spa
                 </h1>
                 <p className="text-sm text-gray-600">
                   Welcome back, {admin?.email}

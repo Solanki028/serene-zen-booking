@@ -48,7 +48,7 @@ export default function CMSLoginPage() {
           <div className="mx-auto w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
             <Lock className="h-6 w-6 text-primary-foreground" />
           </div>
-          <CardTitle className="text-2xl font-serif">Aroma Thai Spa CMS</CardTitle>
+          <CardTitle className="text-2xl font-serif">Velora Thai Spa</CardTitle>
           <CardDescription>
             Sign in to manage your website content
           </CardDescription>
@@ -62,7 +62,7 @@ export default function CMSLoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@aromathai.com"
+                  placeholder="admin@veloraaspa.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
@@ -106,11 +106,11 @@ export default function CMSLoginPage() {
           </form>
 
           <div className="mt-6 p-4 bg-muted rounded-lg">
-            <p className="text-sm text-muted-foreground text-center">
+            {/* <p className="text-sm text-muted-foreground text-center">
               <strong>Demo Credentials:</strong><br />
               Email: admin@aromathai.com<br />
               Password: admin123
-            </p>
+            </p> */}
           </div>
         </CardContent>
       </Card>
