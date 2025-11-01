@@ -1,4 +1,4 @@
-# 🧘‍♀️ Aroma Thai Spa
+# 🧘‍♀️ veloraa Spa and massage 
 
 A modern, full-stack wellness website for authentic Thai massage and spa services. Features a beautiful frontend for customers and a comprehensive CMS system for content management.
 
