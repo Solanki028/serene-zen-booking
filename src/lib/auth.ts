@@ -18,7 +18,8 @@ export class AuthService {
 
   static async login(email: string, password: string): Promise<AuthResponse> {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+      const response = await fetch(`${backendUrl}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,7 +42,8 @@ export class AuthService {
     if (!token) return false;
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/verify', {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+      const response = await fetch(`${backendUrl}/api/auth/verify`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
