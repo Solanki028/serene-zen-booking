@@ -16,6 +16,8 @@ import settingRoutes from './routes/settings.js';
 import homepageRoutes from './routes/homepage.js';
 import aboutRoutes from './routes/about.js';
 import uploadRoutes from './routes/upload.js';
+import articleRoutes from './routes/articles.js';
+import articleCategoryRoutes from './routes/articleCategories.js';
 
 // Load environment variables
 dotenv.config();
@@ -71,10 +73,10 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// More specific rate limiting for auth endpoints
+// More specific rate limiting for auth endpoints - INCREASED FOR DEVELOPMENT
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // limit each IP to 10 auth requests per windowMs
+  max: 50, // limit each IP to 50 auth requests per windowMs (increased for dev)
   message: {
     success: false,
     message: 'Too many authentication attempts, please try again later.',
@@ -101,6 +103,8 @@ app.use('/api/settings', settingRoutes);
 app.use('/api/homepage', homepageRoutes);
 app.use('/api/about', aboutRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/articles', articleRoutes);
+app.use('/api/article-categories', articleCategoryRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

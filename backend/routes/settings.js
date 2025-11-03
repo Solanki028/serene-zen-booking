@@ -99,6 +99,11 @@ router.put('/', authenticateToken, requireAdmin, async (req, res) => {
     const updatedSettings = [];
 
     for (const [key, value] of Object.entries(settingsData)) {
+      // Skip empty values to avoid validation errors
+      if (value === '' || value === null || value === undefined) {
+        continue;
+      }
+
       const setting = await Setting.findOneAndUpdate(
         { key },
         { value },

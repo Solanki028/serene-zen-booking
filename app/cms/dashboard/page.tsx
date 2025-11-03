@@ -86,10 +86,11 @@ export default function CMSDashboard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="homepage">Homepage</TabsTrigger>
             <TabsTrigger value="services">Services</TabsTrigger>
+            <TabsTrigger value="articles">Articles</TabsTrigger>
             <TabsTrigger value="memberships">Memberships</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
@@ -227,6 +228,24 @@ export default function CMSDashboard() {
                 <CardContent>
                   <Button onClick={() => router.push("/cms/dashboard/memberships")}>
                     Manage Memberships
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="articles">
+            <div className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Articles Management</CardTitle>
+                  <CardDescription>
+                    Create and manage blog articles and categories
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button onClick={() => router.push("/cms/dashboard/articles")}>
+                    Manage Articles
                   </Button>
                 </CardContent>
               </Card>

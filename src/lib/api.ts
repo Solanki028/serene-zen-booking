@@ -210,6 +210,64 @@ class ApiService {
   async getCategoriesAdmin() {
     return this.request('/categories/admin');
   }
+
+  // Articles
+  async getArticles() {
+    return this.request('/articles');
+  }
+
+  async getArticle(slug: string) {
+    return this.request(`/articles/${slug}`);
+  }
+
+  async createArticle(articleData: any) {
+    return this.request('/articles', {
+      method: 'POST',
+      body: JSON.stringify(articleData),
+    });
+  }
+
+  async updateArticle(id: string, articleData: any) {
+    return this.request(`/articles/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(articleData),
+    });
+  }
+
+  async deleteArticle(id: string) {
+    return this.request(`/articles/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Article Categories
+  async getArticleCategories() {
+    return this.request('/article-categories');
+  }
+
+  async getArticleCategoriesAdmin() {
+    return this.request('/article-categories/admin');
+  }
+
+  async createArticleCategory(categoryData: any) {
+    return this.request('/article-categories', {
+      method: 'POST',
+      body: JSON.stringify(categoryData),
+    });
+  }
+
+  async updateArticleCategory(id: string, categoryData: any) {
+    return this.request(`/article-categories/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(categoryData),
+    });
+  }
+
+  async deleteArticleCategory(id: string) {
+    return this.request(`/article-categories/${id}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export const apiService = new ApiService();

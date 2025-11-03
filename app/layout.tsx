@@ -39,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* <link rel="icon" href="data:," /> */}
+        <link rel="icon" href="data:," />
       </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans`}>
         {children}
