@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { marked } from "marked";
 import { Calendar, Clock, User, ArrowLeft, Share2 } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 
@@ -197,9 +198,14 @@ export default function ArticleDetailPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-blockquote:border-primary prose-blockquote:text-gray-600"
-            dangerouslySetInnerHTML={{ __html: article.content }}
-          />
+            className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-blockquote:border-primary prose-blockquote:text-gray-600 prose-img:mx-auto prose-img:block prose-img:my-8"
+          >
+            {/* Render markdown content */}
+            <div
+              dangerouslySetInnerHTML={{ __html: marked(article.content) }}
+              className="text-left [&_img]:mx-auto [&_img]:block [&_img]:my-8 [&_p]:text-left [&_p]:mb-6 [&_ul]:text-left [&_ol]:text-left [&_li]:text-left [&_blockquote]:text-left [&_h1]:text-left [&_h1]:font-bold [&_h1]:text-3xl [&_h1]:mb-4 [&_h2]:text-left [&_h2]:font-bold [&_h2]:text-2xl [&_h2]:mb-3 [&_h3]:text-left [&_h3]:font-bold [&_h3]:text-xl [&_h3]:mb-2"
+            />
+          </motion.div>
 
           {/* Tags */}
           {article.tags && article.tags.length > 0 && (

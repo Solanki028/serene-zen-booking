@@ -474,18 +474,17 @@ function ServiceForm({ service, onSave }: { service: Service | null; onSave: () 
               className="hidden"
               onChange={async (e) => {
                 const file = e.target.files?.[0];
-                if (file) {
-                  try {
-                    const response = await apiService.uploadImage(file);
-                    if (response.success) {
-                      updateImage(index, response.data.url);
-                    }
-                  } catch (error) {
-                    console.error('Upload failed:', error);
-                    alert('Failed to upload image');
-                  }
+                if (!file) return;
+              
+                try {
+                  const { url } = await apiService.uploadImage(file); // <- new return shape
+                  updateImage(index, url);
+                } catch (error: any) {
+                  console.error('Upload failed:', error);
+                  alert(error?.message || 'Failed to upload image');
                 }
               }}
+              
             />
             <Button
               type="button"

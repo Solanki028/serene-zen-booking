@@ -184,11 +184,10 @@ export default function TestimonialsManagement() {
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
-                            className={`h-4 w-4 ${
-                              i < testimonial.rating
+                            className={`h-4 w-4 ${i < testimonial.rating
                                 ? 'text-yellow-400 fill-current'
                                 : 'text-gray-300'
-                            }`}
+                              }`}
                           />
                         ))}
                       </div>
@@ -294,11 +293,10 @@ function TestimonialForm({ testimonial, onSave }: { testimonial: Testimonial | n
               className="focus:outline-none"
             >
               <Star
-                className={`h-6 w-6 ${
-                  star <= formData.rating
+                className={`h-6 w-6 ${star <= formData.rating
                     ? 'text-yellow-400 fill-current'
                     : 'text-gray-300'
-                }`}
+                  }`}
               />
             </button>
           ))}
@@ -331,18 +329,17 @@ function TestimonialForm({ testimonial, onSave }: { testimonial: Testimonial | n
           className="hidden"
           onChange={async (e) => {
             const file = e.target.files?.[0];
-            if (file) {
-              try {
-                const response = await apiService.uploadImage(file);
-                if (response.success) {
-                  setFormData(prev => ({ ...prev, avatarUrl: response.data.url }));
-                }
-              } catch (error) {
-                console.error('Upload failed:', error);
-                alert('Failed to upload image');
-              }
+            if (!file) return;
+
+            try {
+              const { url } = await apiService.uploadImage(file); // normalized return
+              setFormData(prev => ({ ...prev, avatarUrl: url }));
+            } catch (error: any) {
+              console.error('Upload failed:', error);
+              alert(error?.message || 'Failed to upload image');
             }
           }}
+
         />
       </div>
 

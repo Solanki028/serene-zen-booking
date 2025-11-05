@@ -11,6 +11,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AuthService } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
+import { apiService } from "@/lib/api";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
+
 import {
   ArrowLeft,
   Loader2,
@@ -57,7 +60,6 @@ export default function EditArticlePage({ params }: { params: Promise<{ slug: st
     seoTitle: '',
     seoDescription: '',
     featuredImage: '',
-    contentImages: [] as Array<{url: string, alt: string, caption: string}>,
   });
   const router = useRouter();
   const { toast } = useToast();
@@ -117,7 +119,6 @@ export default function EditArticlePage({ params }: { params: Promise<{ slug: st
           seoTitle: article.seoTitle || '',
           seoDescription: article.seoDescription || '',
           featuredImage: article.featuredImage || '',
-          contentImages: article.contentImages || [],
         });
       } else {
         console.error('Invalid articles data format:', data);
@@ -201,72 +202,8 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 };
 
-const handleImageUpload = async (file: File, type: 'featured' | 'content') => {
-  try {
-    const formDataUpload = new FormData();
-    formDataUpload.append('image', file);
 
-    const response = await fetch('/api/upload/image', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${AuthService.getToken()}`,
-      },
-      body: formDataUpload,
-    });
 
-    const data = await response.json();
-
-    if (data.success) {
-      if (type === 'featured') {
-        setFormData(prev => ({ ...prev, featuredImage: data.url }));
-        alert('Cover image uploaded successfully!');
-        toast({
-          title: "Success!",
-          description: "Featured image uploaded successfully.",
-        });
-      } else {
-        const newImage = {
-          url: data.url,
-          alt: '',
-          caption: ''
-        };
-        setFormData(prev => ({
-          ...prev,
-          contentImages: [...prev.contentImages, newImage]
-        }));
-        toast({
-          title: "Success!",
-          description: "Content image added successfully.",
-        });
-      }
-    } else {
-      throw new Error(data.message || 'Upload failed');
-    }
-  } catch (error) {
-    console.error('Failed to upload image:', error);
-    toast({
-      title: "Error",
-      description: "Failed to upload image. Please try again.",
-      variant: "destructive",
-    });
-  }
-};
-
-const updateContentImage = (index: number, field: 'alt' | 'caption', value: string) => {
-  setFormData(prev => ({
-    ...prev,
-    contentImages: prev.contentImages.map((img, i) =>
-      i === index ? { ...img, [field]: value } : img
-    )
-  }));
-};
-
-const removeContentImage = (index: number) => {
-  setFormData(prev => ({
-    ...prev,
-    contentImages: prev.contentImages.filter((_, i) => i !== index)
-  }));
-};
 
 if (isLoading) {
   return (
@@ -353,20 +290,11 @@ return (
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="content">Content *</Label>
-              <Textarea
-                id="content"
-                value={formData.content}
-                onChange={(e) => handleInputChange('content', e.target.value)}
-                placeholder="Full article content - you can add images using the 'Add Image' button below"
-                rows={15}
-                required
-              />
-              <p className="text-sm text-gray-500">
-                Tip: Use the "Add Image" button below to insert images into your content. Images will be uploaded to Cloudinary and embedded in your article.
-              </p>
-            </div>
+            <RichTextEditor
+              value={formData.content}
+              onChange={(value) => handleInputChange('content', value)}
+              placeholder="Write your article content here..."
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -434,7 +362,7 @@ return (
                   <img
                     src={formData.featuredImage}
                     alt="Featured"
-                    className="w-full h-32 object-cover rounded"
+                    className="w-full h-48 object-cover rounded"
                   />
                   <Button
                     type="button"
@@ -457,9 +385,33 @@ return (
                         type="file"
                         accept="image/*"
                         className="hidden"
-                        onChange={(e) => {
+                        onChange={async (e) => {
                           const file = e.target.files?.[0];
-                          if (file) handleImageUpload(file, 'featured');
+                          if (file) {
+                            const MAX_MB = 10;
+                            if (!file.type?.startsWith('image/')) {
+                              toast({ title: "Invalid file", description: "Please select an image.", variant: "destructive" });
+                              return;
+                            }
+                            if (file.size > MAX_MB * 1024 * 1024) {
+                              toast({ title: "Image too large", description: `Max ${MAX_MB} MB allowed.`, variant: "destructive" });
+                              return;
+                            }
+
+                            try {
+                              toast({ title: "Uploading...", description: "Please wait while we upload your image." });
+                              const result = await apiService.uploadImage(file);
+                              setFormData(prev => ({ ...prev, featuredImage: result.url }));
+                              toast({ title: "Cover image uploaded" });
+                            } catch (err: any) {
+                              console.error('Failed to upload image:', err);
+                              toast({
+                                title: "Upload failed",
+                                description: err?.message || 'Failed to upload image.',
+                                variant: "destructive",
+                              });
+                            }
+                          }
                         }}
                       />
                     </label>
@@ -469,72 +421,6 @@ return (
               )}
             </div>
 
-            {/* Content Images */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label>Content Images</Label>
-                <label htmlFor="content-image" className="cursor-pointer">
-                  <Button type="button" variant="outline" size="sm">
-                    <Upload className="h-4 w-4 mr-2" />
-                    Add Image
-                  </Button>
-                  <input
-                    id="content-image"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) handleImageUpload(file, 'content');
-                    }}
-                  />
-                </label>
-              </div>
-
-              {formData.contentImages.length > 0 && (
-                <div className="space-y-4">
-                  {formData.contentImages.map((image, index) => (
-                    <div key={index} className="border rounded-lg p-4 space-y-3">
-                      <div className="flex items-start gap-4">
-                        <img
-                          src={image.url}
-                          alt={image.alt || 'Content image'}
-                          className="w-20 h-20 object-cover rounded"
-                        />
-                        <div className="flex-1 space-y-2">
-                          <Input
-                            placeholder="Alt text (for accessibility)"
-                            value={image.alt}
-                            onChange={(e) => updateContentImage(index, 'alt', e.target.value)}
-                          />
-                          <Input
-                            placeholder="Caption (optional)"
-                            value={image.caption}
-                            onChange={(e) => updateContentImage(index, 'caption', e.target.value)}
-                          />
-                        </div>
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => removeContentImage(index)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {formData.contentImages.length === 0 && (
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                  <Upload className="mx-auto h-8 w-8 text-gray-400" />
-                  <p className="text-sm text-gray-500 mt-2">No content images added yet</p>
-                  <p className="text-xs text-gray-400 mt-1">Add images to include in your article content</p>
-                </div>
-              )}
-            </div>
           </CardContent>
         </Card>
 

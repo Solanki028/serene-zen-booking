@@ -156,27 +156,63 @@ class ApiService {
     });
   }
 
-  // File Upload
-  async uploadImage(file: File) {
-    const formData = new FormData();
-    formData.append('image', file);
+// src/lib/api.ts
+async uploadImage(file: File): Promise<{ url: string }> {
+  const MAX_MB = 10; // match your UI copy
+  if (!file) throw new Error('Please select an image file.');
+  if (!file.type?.startsWith('image/')) throw new Error('Please select a valid image file.');
+  if (file.size > MAX_MB * 1024 * 1024) throw new Error(`Image is too large. Max ${MAX_MB} MB.`);
 
-    const response = await fetch(`${this.baseURL}/upload/image`, {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  let res: Response;
+  try {
+    // ALWAYS hit the Next proxy on same origin
+    res = await fetch('/api/upload', {
       method: 'POST',
       headers: {
-        ...AuthService.getAuthHeaders(),
+        ...AuthService.getAuthHeaders(), // ok to include; backend may require admin token
+        // DO NOT set Content-Type manually for FormData
       },
       body: formData,
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || 'Upload failed');
-    }
-
-    return data;
+  } catch {
+    throw new Error('Network error while uploading.');
   }
+
+  const text = await res.text();
+  let data: any;
+  try { data = JSON.parse(text); } catch { data = { message: text || res.statusText }; }
+
+  if (!res.ok) {
+    const status = res.status;
+    let msg = data?.message || data?.error || 'Upload failed';
+    if (status === 413) msg = 'Image too large.';
+    else if (status === 415) msg = 'Unsupported media type.';
+    else if (status === 400 || status === 422) msg = `Invalid image: ${msg}`;
+    else if (status >= 500) msg = 'Server error during upload.';
+    const e = new Error(msg) as Error & { status?: number };
+    e.status = status;
+    throw e;
+  }
+
+  // ✅ Only ever return { url }
+  const url: string | undefined =
+    data?.url ??
+    data?.data?.url ??
+    data?.secure_url ??
+    data?.data?.secure_url;
+
+  if (!url) {
+    // surface the payload to make debugging obvious, but don't throw a vague message
+    console.error('Upload response missing url:', data);
+    throw new Error('Upload succeeded but no URL returned.');
+  }
+
+  return { url };
+}
+
 
   async uploadImages(files: File[]) {
     const formData = new FormData();
@@ -265,6 +301,61 @@ class ApiService {
 
   async deleteArticleCategory(id: string) {
     return this.request(`/article-categories/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Member Registrations
+  async getMemberRegistrations() {
+    return this.request('/member-registrations');
+  }
+
+  async createMemberRegistration(registrationData: any) {
+    return this.request('/member-registrations', {
+      method: 'POST',
+      body: JSON.stringify(registrationData),
+    });
+  }
+
+  async updateMemberRegistrationStatus(id: string, status: string) {
+    return this.request(`/member-registrations/${id}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  async deleteMemberRegistration(id: string) {
+    return this.request(`/member-registrations/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Bookings
+  async getBookings(page = 1, limit = 10, search = '') {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      search
+    });
+    return this.request(`/bookings?${params}`);
+  }
+
+  async createBooking(bookingData: any) {
+    return this.request('/bookings', {
+      method: 'POST',
+      body: JSON.stringify(bookingData),
+    });
+  }
+
+  async updateBookingStatus(id: string, status: string) {
+    return this.request(`/bookings/${id}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  async deleteBooking(id: string) {
+    return this.request(`/bookings/${id}`, {
       method: 'DELETE',
     });
   }

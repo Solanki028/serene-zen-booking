@@ -1,7 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
+import { BookingModal } from "@/components/ui/booking-modal";
+import { Button } from "@/components/ui/button";
 
 const services = [
   {
@@ -39,6 +43,12 @@ const services = [
 ];
 
 export const WellnessJourney = () => {
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
+  const handleBookNow = () => {
+    setIsBookingModalOpen(true);
+  };
+
   return (
     <section className="py-24 px-4 bg-gradient-to-b from-amber-50/30 via-white to-rose-50/20">
       <div className="max-w-7xl mx-auto">
@@ -111,12 +121,23 @@ export const WellnessJourney = () => {
                     whileHover={{ opacity: 1, y: 0 }}
                     className="mt-6 opacity-0 group-hover:opacity-100 transition-all duration-300"
                   >
-                    <span className={`text-sm font-semibold ${service.accentColor} flex items-center justify-center gap-2 cursor-pointer`}>
-                      Learn More
-                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </span>
+                    <div className="flex flex-col gap-3 items-center">
+                      <Link href="/aboutus">
+                        <span className={`text-sm font-semibold ${service.accentColor} flex items-center justify-center gap-2 cursor-pointer hover:underline`}>
+                          Learn More About Us
+                          <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </span>
+                      </Link>
+                      <Button
+                        onClick={handleBookNow}
+                        size="sm"
+                        className={`bg-gradient-to-r ${service.color} hover:opacity-90 text-white border-0`}
+                      >
+                        Book Now
+                      </Button>
+                    </div>
                   </motion.div>
                 </div>
               </div>
@@ -124,6 +145,11 @@ export const WellnessJourney = () => {
           ))}
         </div>
       </div>
+
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
     </section>
   );
 }

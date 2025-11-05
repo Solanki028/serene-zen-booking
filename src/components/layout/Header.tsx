@@ -26,7 +26,7 @@ export const Header = () => {
             <span className="hidden sm:inline">WhatsApp</span>
           </a>
         </div>
-        <Button 
+        {/* <Button 
           size="sm" 
           variant="secondary"
           onClick={handleBookNow}
@@ -34,7 +34,7 @@ export const Header = () => {
         >
           <Calendar className="h-4 w-4" />
           Book Now
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

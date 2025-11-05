@@ -86,12 +86,13 @@ export default function CMSDashboard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="homepage">Homepage</TabsTrigger>
             <TabsTrigger value="services">Services</TabsTrigger>
             <TabsTrigger value="articles">Articles</TabsTrigger>
             <TabsTrigger value="memberships">Memberships</TabsTrigger>
+            <TabsTrigger value="bookings">Bookings</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
@@ -264,6 +265,24 @@ export default function CMSDashboard() {
                 <CardContent>
                   <Button onClick={() => router.push("/cms/dashboard/testimonials")}>
                     Manage Testimonials
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="bookings">
+            <div className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Bookings Management</CardTitle>
+                  <CardDescription>
+                    Manage customer booking requests and appointments
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button onClick={() => router.push("/cms/dashboard/bookings")}>
+                    Manage Bookings
                   </Button>
                 </CardContent>
               </Card>

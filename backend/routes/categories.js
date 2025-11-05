@@ -8,10 +8,16 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const categories = await Category.find({ isActive: true }).sort({ order: 1 });
-    res.json(categories);
+    res.json({
+      success: true,
+      data: categories
+    });
   } catch (error) {
     console.error('Error fetching categories:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 });
 

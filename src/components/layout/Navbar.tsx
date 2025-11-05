@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Calendar, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BookingModal } from "@/components/ui/booking-modal";
 
 interface ArticleCategory {
   _id: string;
@@ -18,6 +19,21 @@ export const Navbar = () => {
   const [isArticlesDropdownOpen, setIsArticlesDropdownOpen] = useState(false);
   const [articleCategories, setArticleCategories] = useState<ArticleCategory[]>([]);
   const pathname = usePathname();
+
+  // --- NEW: timer to prevent gap flicker on hover
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleArticlesEnter = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setIsArticlesDropdownOpen(true);
+  };
+  const handleArticlesLeave = () => {
+    closeTimerRef.current = setTimeout(() => {
+      setIsArticlesDropdownOpen(false);
+    }, 180);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,8 +59,10 @@ export const Navbar = () => {
     loadArticleCategories();
   }, []);
 
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
   const handleBookNow = () => {
-    window.open("https://aromathaispa.zenoti.com", "_blank");
+    setIsBookingModalOpen(true);
   };
 
   const navLinks = [
@@ -67,7 +85,7 @@ export const Navbar = () => {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="text-2xl font-serif font-bold text-primary">
-              Aroma Thai Spa
+              Velora Thai Spa
             </div>
           </Link>
 
@@ -90,8 +108,8 @@ export const Navbar = () => {
             {/* Articles Dropdown */}
             <div
               className="relative"
-              onMouseEnter={() => setIsArticlesDropdownOpen(true)}
-              onMouseLeave={() => setIsArticlesDropdownOpen(false)}
+              onMouseEnter={handleArticlesEnter}
+              onMouseLeave={handleArticlesLeave}
             >
               <button
                 className={`text-sm font-medium transition-colors hover:text-primary relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full flex items-center gap-1 ${
@@ -106,7 +124,11 @@ export const Navbar = () => {
 
               {/* Dropdown Menu */}
               {isArticlesDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                <div
+                  className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                  onMouseEnter={handleArticlesEnter}
+                  onMouseLeave={handleArticlesLeave}
+                >
                   {articleCategories.length > 0 ? (
                     articleCategories.map((category) => (
                       <Link
@@ -196,6 +218,11 @@ export const Navbar = () => {
           </div>
         )}
       </div>
+
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
     </nav>
   );
 };

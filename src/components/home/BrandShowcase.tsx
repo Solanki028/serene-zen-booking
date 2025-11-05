@@ -3,7 +3,10 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, Award, Users, Heart, Sparkles, Crown } from "lucide-react";
+import { Star, Award, Users, Heart, Sparkles, Crown, Calendar } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { BookingModal } from "@/components/ui/booking-modal";
 
 const features = [
   {
@@ -44,6 +47,12 @@ const stats = [
 ];
 
 export const BrandShowcase = () => {
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
+  const handleBookNow = () => {
+    setIsBookingModalOpen(true);
+  };
+
   return (
     <section className="py-20 bg-gradient-to-br from-background via-muted/30 to-background relative overflow-hidden">
       {/* Background Pattern */}
@@ -150,15 +159,26 @@ export const BrandShowcase = () => {
             Ready to experience the difference? Book your transformative wellness journey today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-primary text-primary-foreground px-8 py-4 rounded-xl font-semibold hover:bg-primary/90 transition-colors duration-300 shadow-lg hover:shadow-xl">
+            <button
+              onClick={handleBookNow}
+              className="bg-primary text-primary-foreground px-8 py-4 rounded-xl font-semibold hover:bg-primary/90 transition-colors duration-300 shadow-lg hover:shadow-xl gap-2 flex items-center justify-center"
+            >
+              <Calendar className="h-4 w-4" />
               Book Your Session
             </button>
-            <button className="border border-primary text-primary px-8 py-4 rounded-xl font-semibold hover:bg-primary/5 transition-colors duration-300">
-              Learn More About Us
-            </button>
+            <Link href="/aboutus">
+              <button className="border border-primary text-primary px-8 py-4 rounded-xl font-semibold hover:bg-primary/5 transition-colors duration-300">
+                Learn More About Us
+              </button>
+            </Link>
           </div>
         </motion.div>
       </div>
+
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
     </section>
   );
 };

@@ -90,14 +90,14 @@ export default function HomepageManagement() {
     } : null);
   };
 
-  const updateTrustBadge = (index: number, field: string, value: string) => {
-    setContent(prev => prev ? {
-      ...prev,
-      trustBadges: prev.trustBadges.map((badge, i) =>
-        i === index ? { ...badge, [field]: value } : badge
-      )
-    } : null);
-  };
+  // const updateTrustBadge = (index: number, field: string, value: string) => {
+  //   setContent(prev => prev ? {
+  //     ...prev,
+  //     trustBadges: prev.trustBadges.map((badge, i) =>
+  //       i === index ? { ...badge, [field]: value } : badge
+  //     )
+  //   } : null);
+  // };
 
   const updateMembershipTeaser = (field: string, value: string | string[]) => {
     setContent(prev => prev ? {
@@ -214,62 +214,24 @@ export default function HomepageManagement() {
                 className="hidden"
                 onChange={async (e) => {
                   const file = e.target.files?.[0];
-                  if (file) {
-                    try {
-                      const response = await apiService.uploadImage(file);
-                      if (response.success) {
-                        updateHero('heroImage', response.data.url);
-                      }
-                    } catch (error) {
-                      console.error('Upload failed:', error);
-                      alert('Failed to upload image');
-                    }
+                  if (!file) return;
+                
+                  try {
+                    const { url } = await apiService.uploadImage(file); // ← new shape
+                    updateHero('heroImage', url);
+                  } catch (error: any) {
+                    console.error('Upload failed:', error);
+                    alert(error?.message || 'Failed to upload image');
                   }
                 }}
+                
               />
             </div>
           </CardContent>
         </Card>
 
-        {/* Trust Badges */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Trust Badges</CardTitle>
-            <CardDescription>
-              Credibility indicators displayed below the hero section
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {content.trustBadges.map((badge, index) => (
-              <div key={index} className="grid grid-cols-3 gap-4 p-4 border rounded-lg">
-                <div className="space-y-2">
-                  <Label>Icon</Label>
-                  <Input
-                    value={badge.icon}
-                    onChange={(e) => updateTrustBadge(index, 'icon', e.target.value)}
-                    placeholder="Icon name"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Title</Label>
-                  <Input
-                    value={badge.title}
-                    onChange={(e) => updateTrustBadge(index, 'title', e.target.value)}
-                    placeholder="Badge title"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Description</Label>
-                  <Input
-                    value={badge.description}
-                    onChange={(e) => updateTrustBadge(index, 'description', e.target.value)}
-                    placeholder="Badge description"
-                  />
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+     
+       
 
         {/* Membership Teaser */}
         <Card>

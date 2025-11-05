@@ -163,96 +163,25 @@ export default function ArticlesManagement() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs defaultValue="articles" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="articles">Articles</TabsTrigger>
-            <TabsTrigger value="added-articles">Added Articles</TabsTrigger>
+        <Tabs defaultValue="added-articles" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="added-articles">Articles</TabsTrigger>
             <TabsTrigger value="categories">Categories</TabsTrigger>
-            <TabsTrigger value="added-categories">Added Categories</TabsTrigger>
+            {/* <TabsTrigger value="added-categories">Added Categories</TabsTrigger> */}
           </TabsList>
-
-          <TabsContent value="articles" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">All Articles</h2>
-              <Button onClick={() => router.push("/cms/dashboard/articles/new")}>
-                <Plus className="h-4 w-4 mr-2" />
-                New Article
-              </Button>
-            </div>
-
-            <div className="grid gap-4">
-              {articles.length === 0 ? (
-                <Card>
-                  <CardContent className="flex flex-col items-center justify-center py-12">
-                    <FileText className="h-12 w-12 text-gray-400 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No articles yet</h3>
-                    <p className="text-gray-600 mb-4">Create your first article to get started.</p>
-                    <Button onClick={() => router.push("/cms/dashboard/articles/new")}>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Create Article
-                    </Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                articles.map((article) => (
-                  <Card key={article._id}>
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              {article.title}
-                            </h3>
-                            <Badge variant={article.published ? "default" : "secondary"}>
-                              {article.published ? "Published" : "Draft"}
-                            </Badge>
-                          </div>
-                          <p className="text-gray-600 text-sm mb-2 line-clamp-2">
-                            {article.excerpt}
-                          </p>
-                          <div className="flex items-center gap-4 text-sm text-gray-500">
-                            <span>By {article.author}</span>
-                            <span>{article.category?.name || 'No Category'}</span>
-                            <span>{new Date(article.createdAt).toLocaleDateString()}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 ml-4">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => router.push(`/articles/${article.slug}`)}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => router.push(`/cms/dashboard/articles/${article._id}/edit`)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleDeleteArticle(article._id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </div>
-          </TabsContent>
 
           <TabsContent value="added-articles" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">Manage Articles</h2>
-              <Button onClick={() => router.push("/cms/dashboard/articles/added")}>
-                <Edit className="h-4 w-4 mr-2" />
-                Manage All Articles
+              <div className="flex items-center gap-4">
+                <Button onClick={() => router.push("/cms/dashboard/articles/added")}>
+                  <Edit className="h-4 w-4 mr-2" />
+                  Manage Articles
+                </Button>
+
+              </div>
+              <Button onClick={() => router.push("/cms/dashboard/articles/new")}>
+                <Plus className="h-4 w-4 mr-2" />
+                New Article
               </Button>
             </div>
 
@@ -271,7 +200,13 @@ export default function ArticlesManagement() {
 
           <TabsContent value="categories" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">Article Categories</h2>
+              <div className="flex items-center gap-4">
+                <Button onClick={() => router.push("/cms/dashboard/articles/categories/added")}>
+                  <Edit className="h-4 w-4 mr-2" />
+                  Manage Categories
+                </Button>
+               
+              </div>
               <Button onClick={() => router.push("/cms/dashboard/articles/categories/new")}>
                 <Plus className="h-4 w-4 mr-2" />
                 New Category

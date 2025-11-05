@@ -18,6 +18,8 @@ import aboutRoutes from './routes/about.js';
 import uploadRoutes from './routes/upload.js';
 import articleRoutes from './routes/articles.js';
 import articleCategoryRoutes from './routes/articleCategories.js';
+import memberRegistrationRoutes from './routes/memberRegistrations.js';
+import bookingRoutes from './routes/bookings.js';
 
 // Load environment variables
 dotenv.config();
@@ -105,6 +107,8 @@ app.use('/api/about', aboutRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/article-categories', articleCategoryRoutes);
+app.use('/api/member-registrations', memberRegistrationRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

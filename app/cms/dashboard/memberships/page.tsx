@@ -32,7 +32,7 @@ import {
   Plus,
   Edit,
   Trash2,
-  DollarSign
+ 
 } from "lucide-react";
 
 interface Membership {
@@ -126,6 +126,12 @@ export default function MembershipsManagement() {
               <Button variant="outline" onClick={() => router.push("/cms/dashboard")}>
                 Back to Dashboard
               </Button>
+              
+              {/* <Button variant="secondary" onClick={() => router.push("/cms/dashboard/memberships/registrations")}>
+                View Registrations
+              </Button> */}
+
+
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button onClick={() => setEditingMembership(null)}>
@@ -133,7 +139,7 @@ export default function MembershipsManagement() {
                     Add Membership
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl">
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle>
                       {editingMembership ? 'Edit Membership' : 'Add New Membership'}
@@ -185,8 +191,7 @@ export default function MembershipsManagement() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
-                        <DollarSign className="h-4 w-4" />
-                        {membership.price}
+                        <span className="font-medium">₹{membership.price}</span>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -290,7 +295,7 @@ function MembershipForm({ membership, onSave }: { membership: Membership | null;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="name">Name</Label>
           <Input
@@ -301,7 +306,7 @@ function MembershipForm({ membership, onSave }: { membership: Membership | null;
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="price">Price</Label>
+          <Label htmlFor="price">Price (₹)</Label>
           <Input
             id="price"
             type="number"

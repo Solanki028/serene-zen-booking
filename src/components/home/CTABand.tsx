@@ -1,11 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar } from "lucide-react";
+import { BookingModal } from "@/components/ui/booking-modal";
 
 export const CTABand = () => {
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
   const handleBookNow = () => {
-    window.open("https://aromathaispa.zenoti.com", "_blank");
+    setIsBookingModalOpen(true);
   };
 
   return (
@@ -21,14 +25,14 @@ export const CTABand = () => {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               variant="secondary"
               onClick={handleBookNow}
               className="gap-2"
             >
               <Calendar className="h-5 w-5" />
-              Book with Zenoti
+              Book Your Session
             </Button>
             <Button 
               size="lg" 
@@ -42,6 +46,11 @@ export const CTABand = () => {
           </div>
         </div>
       </div>
+
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
     </section>
   );
 };

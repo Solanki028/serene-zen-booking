@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Calendar, ArrowRight } from "lucide-react";
 import { apiService } from "@/lib/api";
+import { BookingModal } from "@/components/ui/booking-modal";
 
 interface HomepageContent {
   heroHeadline: string;
@@ -42,8 +43,10 @@ export const Hero = () => {
     loadContent();
   }, []);
 
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
   const handleBookNow = () => {
-    window.open("https://aromathaispa.zenoti.com", "_blank");
+    setIsBookingModalOpen(true);
   };
 
   if (isLoading) {
@@ -100,7 +103,7 @@ export const Hero = () => {
               <Button
                 size="lg"
                 variant="secondary"
-                onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => window.location.href = '/ourservices'}
                 className="gap-2 text-lg px-8 py-6"
               >
                 Explore Services
@@ -110,6 +113,11 @@ export const Hero = () => {
           </motion.div>
         </div>
       </div>
+
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
     </section>
   );
 };

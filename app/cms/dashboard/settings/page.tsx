@@ -248,18 +248,17 @@ export default function SettingsManagement() {
                 className="hidden"
                 onChange={async (e) => {
                   const file = e.target.files?.[0];
-                  if (file) {
-                    try {
-                      const response = await apiService.uploadImage(file);
-                      if (response.success) {
-                        updateSetting('service_page_hero_image', response.data.url);
-                      }
-                    } catch (error) {
-                      console.error('Upload failed:', error);
-                      alert('Failed to upload image');
-                    }
+                  if (!file) return;
+
+                  try {
+                    const { url } = await apiService.uploadImage(file); // ← normalized return
+                    updateSetting('service_page_hero_image', url);
+                  } catch (error: any) {
+                    console.error('Upload failed:', error);
+                    alert(error?.message || 'Failed to upload image');
                   }
                 }}
+
               />
             </div>
           </CardContent>
