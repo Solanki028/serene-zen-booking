@@ -15,18 +15,18 @@ const playfair = Playfair_Display({
 })
 
 // export const metadata: Metadata = {
-//   title: 'Aroma Thai Spa - Authentic Thai Massage & Wellness Since 2008',
-//   description: 'Experience authentic Thai massage and holistic wellness at Aroma Thai Spa. Expert therapists, serene environment, customized treatments. Book your relaxation journey today.',
-//   keywords: 'Thai massage, wellness, spa, aromatherapy, relaxation, holistic health',
-//   authors: [{ name: 'Aroma Thai Spa' }],
+//   title: 'Velora Thai Spa - Authentic Thai Massage & Wellness Since 2008',
+//   description: 'Experience authentic Thai massage and holistic wellness at Velora Thai Spa. Expert therapists, serene environment, customized treatments. Book your relaxation journey today.',
+//   keywords: 'Thai massage, wellness, spa, Veloratherapy, relaxation, holistic health',
+//   authors: [{ name: 'Velora Thai Spa' }],
 //   openGraph: {
-//     title: 'Aroma Thai Spa - Authentic Thai Massage & Wellness',
+//     title: 'Velora Thai Spa - Authentic Thai Massage & Wellness',
 //     description: 'Experience authentic Thai massage and holistic wellness. Expert therapists, serene environment.',
 //     type: 'website',
 //   },
 //   twitter: {
 //     card: 'summary_large_image',
-//     title: 'Aroma Thai Spa - Authentic Thai Massage & Wellness',
+//     title: 'Velora Thai Spa - Authentic Thai Massage & Wellness',
 //     description: 'Experience authentic Thai massage and holistic wellness. Expert therapists, serene environment.',
 //   },
 // }

@@ -70,6 +70,7 @@ export const Navbar = () => {
     { to: "/ourservices", label: "Our Services" },
     { to: "/membership", label: "Membership" },
     { to: "/giftvoucher", label: "Gift Vouchers" },
+    { to: "/gallery", label: "Gallery" },
     { to: "/aboutus", label: "About Us" },
   ];
 

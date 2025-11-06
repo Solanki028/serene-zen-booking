@@ -73,7 +73,7 @@ export const BrandShowcase = () => {
         >
           <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6">
             <Crown className="h-4 w-4" />
-            <span className="text-sm font-medium">Why Choose Aroma Thai Spa</span>
+            <span className="text-sm font-medium">Why Choose Velora Thai Spa</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
             Experience Excellence in Wellness

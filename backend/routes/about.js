@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
       aboutContent = {
         mission: 'To provide authentic Thai massage and holistic wellness experiences that promote healing, relaxation, and well-being for our community.',
         timeline: [
-          { year: '2008', event: 'Aroma Thai Spa opens its doors' },
+          { year: '2008', event: 'Velora Thai Spa opens its doors' },
           { year: '2012', event: 'Expanded to second location' },
           { year: '2015', event: 'Introduced membership program' },
           { year: '2020', event: 'Launched online booking system' },

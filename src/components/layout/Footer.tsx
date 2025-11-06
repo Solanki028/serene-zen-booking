@@ -8,7 +8,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand & Contact */}
           <div>
-            <h3 className="text-2xl font-serif font-bold mb-4">Aroma Thai Spa</h3>
+            <h3 className="text-2xl font-serif font-bold mb-4">Velora Thai Spa</h3>
             <p className="text-sm opacity-90 mb-6">
               Authentic Thai massage and holistic wellness since 2008.
             </p>
@@ -25,8 +25,8 @@ export const Footer = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 flex-shrink-0" />
-                <a href="mailto:info@aromathai.com" className="opacity-90 hover:opacity-100 transition-opacity">
-                  info@aromathai.com
+                <a href="mailto:info@Velorathai.com" className="opacity-90 hover:opacity-100 transition-opacity">
+                  info@Velorathai.com
                 </a>
               </div>
             </div>
@@ -100,7 +100,7 @@ export const Footer = () => {
         </div>
 
         <div className="border-t border-primary-foreground/20 mt-12 pt-8 text-center text-sm opacity-75">
-          © {new Date().getFullYear()} Aroma Thai Spa. All rights reserved.
+          © {new Date().getFullYear()} Velora Thai Spa. All rights reserved.
         </div>
       </div>
     </footer>

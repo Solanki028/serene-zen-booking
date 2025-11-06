@@ -18,9 +18,9 @@ interface Service {
 
 const defaultServices = [
   {
-    title: "Aromatherapy Massage",
+    title: "Veloratherapy Massage",
     description: "Essential oils and gentle strokes for deep relaxation and stress relief.",
-    image: "/assets/service-aromatherapy.jpg",
+    image: "/assets/service-Veloratherapy.jpg",
   },
   {
     title: "Foot Reflexology",

@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Backend API for Aroma Thai Spa CMS",
+  "description": "Backend API for Velora Thai Spa CMS",
   "main": "server.js",
   "type": "module",
   "scripts": {

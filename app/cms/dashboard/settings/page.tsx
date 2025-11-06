@@ -141,7 +141,7 @@ export default function SettingsManagement() {
                   type="email"
                   value={settings.contact_email || ''}
                   onChange={(e) => updateSetting('contact_email', e.target.value)}
-                  placeholder="info@aromathai.com"
+                  placeholder="info@Velorathai.com"
                 />
               </div>
             </div>
@@ -207,7 +207,7 @@ export default function SettingsManagement() {
                 id="booking_url"
                 value={settings.booking_url || ''}
                 onChange={(e) => updateSetting('booking_url', e.target.value)}
-                placeholder="https://aromathaispa.zenoti.com"
+                placeholder="https://Velorathaispa.zenoti.com"
               />
             </div>
           </CardContent>
@@ -279,7 +279,7 @@ export default function SettingsManagement() {
                 id="meta_title"
                 value={settings.meta_title || ''}
                 onChange={(e) => updateSetting('meta_title', e.target.value)}
-                placeholder="Aroma Thai Spa - Authentic Thai Massage & Wellness"
+                placeholder="Velora Thai Spa - Authentic Thai Massage & Wellness"
               />
             </div>
             <div className="space-y-2">
@@ -288,7 +288,7 @@ export default function SettingsManagement() {
                 id="meta_description"
                 value={settings.meta_description || ''}
                 onChange={(e) => updateSetting('meta_description', e.target.value)}
-                placeholder="Experience authentic Thai massage and holistic wellness at Aroma Thai Spa. Expert therapists, serene environment, customized treatments."
+                placeholder="Experience authentic Thai massage and holistic wellness at Velora Thai Spa. Expert therapists, serene environment, customized treatments."
                 rows={3}
               />
             </div>
@@ -311,7 +311,7 @@ export default function SettingsManagement() {
                   id="facebook_url"
                   value={settings.facebook_url || ''}
                   onChange={(e) => updateSetting('facebook_url', e.target.value)}
-                  placeholder="https://facebook.com/aromathaispa"
+                  placeholder="https://facebook.com/Velorathaispa"
                 />
               </div>
               <div className="space-y-2">
@@ -320,7 +320,7 @@ export default function SettingsManagement() {
                   id="instagram_url"
                   value={settings.instagram_url || ''}
                   onChange={(e) => updateSetting('instagram_url', e.target.value)}
-                  placeholder="https://instagram.com/aromathaispa"
+                  placeholder="https://instagram.com/Velorathaispa"
                 />
               </div>
             </div>

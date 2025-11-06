@@ -45,7 +45,7 @@ export default function ArticleCategoryPage() {
           setData(result.data);
         }
       } catch (error) {
-        console.error('Failed to load articles:', error);
+        console.error("Failed to load articles:", error);
       } finally {
         setIsLoading(false);
       }
@@ -59,20 +59,20 @@ export default function ArticleCategoryPage() {
   if (isLoading) {
     return (
       <Layout>
-        <div className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-emerald-50">
-          <div className="max-w-7xl mx-auto px-6 py-24">
+        <div className="min-h-screen bg-[#fdfbf7]">
+          <div className="max-w-6xl mx-auto px-6 py-24">
             <div className="text-center mb-12">
-              <div className="h-8 bg-gray-200 rounded-lg mb-4 mx-auto w-96 animate-pulse"></div>
-              <div className="h-4 bg-gray-200 rounded-lg mx-auto w-2/3 animate-pulse"></div>
+              <div className="h-8 bg-[#eee6d8] rounded-lg mb-4 mx-auto w-72 animate-pulse" />
+              <div className="h-4 bg-[#eee6d8] rounded-lg mx-auto w-1/2 animate-pulse" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden animate-pulse">
-                  <div className="h-48 bg-gray-200"></div>
-                  <div className="p-6">
-                    <div className="h-6 bg-gray-200 rounded mb-3"></div>
-                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden animate-pulse border border-[#f0e8da]">
+                  <div className="h-48 bg-[#eee6d8]" />
+                  <div className="p-6 space-y-3">
+                    <div className="h-5 bg-[#eee6d8] rounded w-3/4" />
+                    <div className="h-4 bg-[#eee6d8] rounded w-full" />
+                    <div className="h-4 bg-[#eee6d8] rounded w-2/3" />
                   </div>
                 </div>
               ))}
@@ -86,10 +86,10 @@ export default function ArticleCategoryPage() {
   if (!data) {
     return (
       <Layout>
-        <div className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-emerald-50 flex items-center justify-center">
+        <div className="min-h-screen bg-[#fdfbf7] flex items-center justify-center px-6">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Category Not Found</h1>
-            <Link href="/articles" className="text-primary hover:underline">
+            <h1 className="text-3xl font-serif font-bold text-gray-900 mb-4">Category Not Found</h1>
+            <Link href="/articles" className="text-[#b48c52] hover:underline">
               ← Back to Articles
             </Link>
           </div>
@@ -102,27 +102,23 @@ export default function ArticleCategoryPage() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-emerald-50">
-        {/* Header */}
-        <div className="bg-white shadow-sm">
-          <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="min-h-screen bg-[#fdfbf7]">
+        <div className="border-b border-[#e8dfcf] bg-white">
+          <div className="max-w-6xl mx-auto px-6 py-14">
             <Link
               href="/articles"
-              className="inline-flex items-center text-primary hover:text-primary/80 mb-6 transition-colors"
+              className="inline-flex items-center text-[#b48c52] hover:text-black mb-6 transition-colors font-medium"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Articles
             </Link>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center"
-            >
-              <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
+              <h1 className="text-5xl font-serif font-bold text-gray-900 mb-4 tracking-tight">
                 {category.name}
               </h1>
               {category.description && (
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                   {category.description}
                 </p>
               )}
@@ -130,11 +126,10 @@ export default function ArticleCategoryPage() {
           </div>
         </div>
 
-        {/* Articles Grid */}
-        <div className="max-w-7xl mx-auto px-6 py-16">
+        <div className="max-w-6xl mx-auto px-6 py-16">
           {articles.length === 0 ? (
-            <div className="text-center py-16">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">No Articles Yet</h2>
+            <div className="text-center py-20">
+              <h2 className="text-2xl font-serif font-semibold text-gray-900 mb-4">No Articles Yet</h2>
               <p className="text-gray-600">Check back soon for articles in this category.</p>
             </div>
           ) : (
@@ -142,32 +137,30 @@ export default function ArticleCategoryPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
             >
               {articles.map((article, index) => (
                 <motion.article
                   key={article._id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group"
+                  transition={{ delay: index * 0.08 }}
+                  className="bg-white border border-[#f0e8da] rounded-2xl shadow-[0_3px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_6px_18px_rgba(0,0,0,0.08)] transition-all duration-300 overflow-hidden group"
                 >
-                  {/* Featured Image */}
                   <Link href={`/articles/${category.slug}/${article.slug}`}>
-                    <div className="relative h-48 overflow-hidden">
+                    <div className="relative h-52 overflow-hidden">
                       <img
-                        src={article.featuredImage || '/assets/service-traditional.jpg'}
+                        src={article.featuredImage || "/assets/service-traditional.jpg"}
                         alt={article.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
-                      <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
+                      <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-all duration-300" />
                     </div>
                   </Link>
 
-                  {/* Content */}
                   <div className="p-6">
                     <Link href={`/articles/${category.slug}/${article.slug}`}>
-                      <h2 className="text-xl font-serif font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors line-clamp-2">
+                      <h2 className="text-xl font-serif font-semibold text-gray-900 mb-3 group-hover:text-[#b48c52] transition-colors line-clamp-2">
                         {article.title}
                       </h2>
                     </Link>
@@ -176,9 +169,8 @@ export default function ArticleCategoryPage() {
                       {article.excerpt}
                     </p>
 
-                    {/* Meta Information */}
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1">
                           <User className="w-4 h-4" />
                           <span>{article.author}</span>
@@ -186,7 +178,7 @@ export default function ArticleCategoryPage() {
                         {article.readTime && (
                           <div className="flex items-center gap-1">
                             <Clock className="w-4 h-4" />
-                            <span>{article.readTime} min read</span>
+                            <span>{article.readTime} min</span>
                           </div>
                         )}
                       </div>

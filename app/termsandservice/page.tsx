@@ -28,7 +28,7 @@ const TermsAndServicePage = () => {
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4">Acceptance of Terms</h2>
                 <p className="text-muted-foreground mb-4">
-                  By accessing and using Aroma Thai Spa's services, you accept and agree to be bound by
+                  By accessing and using Velora Thai Spa's services, you accept and agree to be bound by
                   the terms and provision of this agreement. If you do not agree to abide by the above,
                   please do not use this service.
                 </p>
@@ -37,7 +37,7 @@ const TermsAndServicePage = () => {
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4">Service Description</h2>
                 <p className="text-muted-foreground mb-4">
-                  Aroma Thai Spa provides traditional Thai massage and wellness services. All services
+                  Velora Thai Spa provides traditional Thai massage and wellness services. All services
                   are performed by certified professionals in a clean and safe environment. Service
                   descriptions, pricing, and availability are subject to change without notice.
                 </p>
@@ -82,7 +82,7 @@ const TermsAndServicePage = () => {
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4">Limitation of Liability</h2>
                 <p className="text-muted-foreground mb-4">
-                  Aroma Thai Spa shall not be liable for any indirect, incidental, special, or consequential
+                  Velora Thai Spa shall not be liable for any indirect, incidental, special, or consequential
                   damages arising out of or in connection with the use of our services. Our liability
                   shall not exceed the amount paid for the service in question.
                 </p>
@@ -91,7 +91,7 @@ const TermsAndServicePage = () => {
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4">Contact Information</h2>
                 <p className="text-muted-foreground">
-                  For questions about these Terms & Services, please contact us at info@aromathai.com
+                  For questions about these Terms & Services, please contact us at info@Velorathai.com
                   or call +1 (234) 567-890.
                 </p>
               </section>

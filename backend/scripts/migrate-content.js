@@ -47,23 +47,23 @@ const staticContent = {
 
   services: [
     {
-      title: 'Aromatherapy Massage',
-      slug: 'aromatherapy-massage',
+      title: 'Veloratherapy Massage',
+      slug: 'Veloratherapy-massage',
       category: 'Massage',
       shortDesc: 'Essential oils and gentle strokes for deep relaxation and stress relief.',
-      longDesc: 'Experience the therapeutic benefits of aromatherapy combined with traditional massage techniques. Our certified therapists use premium essential oils to enhance your relaxation experience.',
+      longDesc: 'Experience the therapeutic benefits of Veloratherapy combined with traditional massage techniques. Our certified therapists use premium essential oils to enhance your relaxation experience.',
       benefits: ['Deep relaxation', 'Stress relief', 'Improved sleep', 'Enhanced mood'],
       durations: [
         { minutes: 60, price: 120 },
         { minutes: 90, price: 160 },
         { minutes: 120, price: 200 },
       ],
-      images: ['/assets/service-aromatherapy.jpg'],
+      images: ['/assets/service-Veloratherapy.jpg'],
       featured: true,
       contraindications: 'Not recommended during pregnancy or for individuals with allergies to essential oils.',
       faqs: [
         { question: 'What essential oils do you use?', answer: 'We use therapeutic-grade essential oils including lavender, eucalyptus, and chamomile.' },
-        { question: 'Is aromatherapy safe for everyone?', answer: 'While generally safe, we recommend consulting with your healthcare provider if you have allergies or medical conditions.' },
+        { question: 'Is Veloratherapy safe for everyone?', answer: 'While generally safe, we recommend consulting with your healthcare provider if you have allergies or medical conditions.' },
       ],
     },
     {
@@ -168,9 +168,9 @@ const staticContent = {
 
   settings: [
     { key: 'contact_phone', value: '+1 (234) 567-890' },
-    { key: 'contact_email', value: 'info@aromathai.com' },
+    { key: 'contact_email', value: 'info@Velorathai.com' },
     { key: 'business_hours', value: 'Mon-Fri: 10AM-9PM, Sat-Sun: 9AM-10PM' },
-    { key: 'booking_url', value: 'https://aromathaispa.zenoti.com' },
+    { key: 'booking_url', value: 'https://Velorathaispa.zenoti.com' },
     { key: 'address', value: '123 Wellness Street, Downtown District' },
     { key: 'whatsapp', value: '+1234567890' },
   ],

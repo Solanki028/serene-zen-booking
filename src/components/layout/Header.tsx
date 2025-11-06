@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export const Header = () => {
   const handleBookNow = () => {
-    window.open("https://aromathaispa.zenoti.com", "_blank");
+    window.open("https://Velorathaispa.zenoti.com", "_blank");
   };
 
   return (

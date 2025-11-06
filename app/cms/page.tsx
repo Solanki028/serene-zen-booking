@@ -108,7 +108,7 @@ export default function CMSLoginPage() {
           <div className="mt-6 p-4 bg-muted rounded-lg">
             {/* <p className="text-sm text-muted-foreground text-center">
               <strong>Demo Credentials:</strong><br />
-              Email: admin@aromathai.com<br />
+              Email: admin@Velorathai.com<br />
               Password: admin123
             </p> */}
           </div>
