@@ -47,19 +47,24 @@ function uploadToCloudinary(buffer, options = {}) {
 
 // ---- Routes ----
 
-// Single image
+// Single image (accepts field name 'image' OR 'file')
 router.post(
   '/image',
   authenticateToken,
   requireAdmin,
-  upload.single('image'),
+  upload.fields([{ name: 'image', maxCount: 1 }, { name: 'file', maxCount: 1 }]),
   async (req, res, next) => {
     try {
-      if (!req.file) {
+      const file =
+        (req.files?.image && req.files.image[0]) ||
+        (req.files?.file && req.files.file[0]) ||
+        null
+
+      if (!file) {
         return res.status(400).json({ message: 'No image file provided' })
       }
 
-      const result = await uploadToCloudinary(req.file.buffer)
+      const result = await uploadToCloudinary(file.buffer)
       // Return a normalized top-level { url } for easier frontend usage
       return res.json({
         url: result.secure_url,
@@ -79,21 +84,24 @@ router.post(
   }
 )
 
-// Multiple images
+// Multiple images (accepts field name 'images' OR 'files')
 router.post(
   '/images',
   authenticateToken,
   requireAdmin,
-  upload.array('images', 10),
+  upload.fields([{ name: 'images', maxCount: 10 }, { name: 'files', maxCount: 10 }]),
   async (req, res, next) => {
     try {
-      if (!req.files || req.files.length === 0) {
+      const list = [
+        ...(req.files?.images || []),
+        ...(req.files?.files || []),
+      ]
+
+      if (!list.length) {
         return res.status(400).json({ message: 'No image files provided' })
       }
 
-      const results = await Promise.all(
-        req.files.map((f) => uploadToCloudinary(f.buffer))
-      )
+      const results = await Promise.all(list.map((f) => uploadToCloudinary(f.buffer)))
 
       const images = results.map((r) => ({
         url: r.secure_url,

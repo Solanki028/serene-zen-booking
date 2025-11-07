@@ -38,29 +38,36 @@ router.post('/login', async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      {
-        id: admin._id,
-        email: admin.email,
-        role: 'admin'
-      },
+      { id: admin._id, email: admin.email, role: 'admin' },
       process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
 
-    res.json({
+    // ✅ NEW: set cookies (duplicate: one scoped to /cms, one to /)
+    const isProd = process.env.NODE_ENV === 'production';
+    const baseCookie = {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: isProd,
+      maxAge: 24 * 60 * 60 * 1000, // 24h
+    };
+
+    // keep your CMS-scoped cookie
+    res.cookie('cms_token', token, { ...baseCookie, path: '/cms' });
+    // add a root-scoped cookie so requests to /api/* include it
+    res.cookie('auth_token', token, { ...baseCookie, path: '/' });
+
+    return res.json({
       success: true,
       message: 'Login successful',
       data: {
         token,
-        admin: {
-          id: admin._id,
-          email: admin.email,
-        },
+        admin: { id: admin._id, email: admin.email },
       },
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Server error',
     });
@@ -80,7 +87,6 @@ router.get('/verify', async (req, res) => {
       });
     }
 
-    // Check if token is expired or invalid
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const admin = await Admin.findById(decoded.id);
@@ -92,17 +98,13 @@ router.get('/verify', async (req, res) => {
         });
       }
 
-      res.json({
+      return res.json({
         success: true,
         data: {
-          admin: {
-            id: admin._id,
-            email: admin.email,
-          },
+          admin: { id: admin._id, email: admin.email },
         },
       });
-    } catch (jwtError) {
-      // Token expired or invalid
+    } catch {
       return res.status(401).json({
         success: false,
         message: 'Token expired or invalid',
@@ -110,7 +112,7 @@ router.get('/verify', async (req, res) => {
     }
   } catch (error) {
     console.error('Token verification error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Server error during token verification',
     });
@@ -122,7 +124,6 @@ router.post('/setup', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Check if admin already exists
     const existingAdmin = await Admin.findOne();
     if (existingAdmin) {
       return res.status(400).json({
@@ -131,11 +132,9 @@ router.post('/setup', async (req, res) => {
       });
     }
 
-    // Hash password
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Create admin
     const admin = new Admin({
       email: email.toLowerCase(),
       password: hashedPassword,
@@ -143,13 +142,13 @@ router.post('/setup', async (req, res) => {
 
     await admin.save();
 
-    res.json({
+    return res.json({
       success: true,
       message: 'Admin created successfully',
     });
   } catch (error) {
     console.error('Setup error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Server error',
     });

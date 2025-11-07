@@ -1,47 +1,72 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+export const dynamic = "force-dynamic";
+
+const BACKEND_URL = (process.env.BACKEND_URL || "http://localhost:5000").replace(/\/+$/, "");
+
+// Reuse the same pattern you used in other proxies
+function getBearerFromReq(req: NextRequest): string | null {
+  // if a header is already present, use it
+  const h = req.headers.get("authorization");
+  if (h && h.trim()) return h.trim();
+
+  // else synthesize from cookies
+  const CANDIDATES = [
+    "auth_token",
+    "cms_token",
+    "token",
+    "admin_token",
+    "adminToken",
+    "access_token",
+    "jwt",
+  ];
+  for (const k of CANDIDATES) {
+    const v = req.cookies.get(k)?.value?.trim();
+    if (v) return /^Bearer\s+/i.test(v) ? v : `Bearer ${v}`;
+  }
+  return null;
+}
 
 export async function GET() {
   try {
-    const response = await fetch(`${BACKEND_URL}/api/settings`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const r = await fetch(`${BACKEND_URL}/api/settings`, {
+      method: "GET",
+      cache: "no-store",
+      headers: { "content-type": "application/json" },
     });
-
-    const data = await response.json();
-    return NextResponse.json(data);
+    const text = await r.text();
+    return new NextResponse(text, {
+      status: r.status,
+      headers: { "content-type": r.headers.get("content-type") ?? "application/json" },
+    });
   } catch (error) {
-    console.error('API proxy error:', error);
-    return NextResponse.json(
-      { success: false, message: 'Server error' },
-      { status: 500 }
-    );
+    console.error("API proxy /api/settings GET error:", error);
+    return NextResponse.json({ success: false, message: "Server error" }, { status: 500 });
   }
 }
 
-export async function PUT(request: NextRequest) {
+export async function PUT(req: NextRequest) {
   try {
-    const body = await request.json();
+    const bodyText = await req.text(); // keep as text to avoid double-parse
+    const bearer = getBearerFromReq(req);
 
-    const response = await fetch(`${BACKEND_URL}/api/settings`, {
-      method: 'PUT',
+    const r = await fetch(`${BACKEND_URL}/api/settings`, {
+      method: "PUT",
+      // Backend expects Authorization, not cookies
       headers: {
-        'Content-Type': 'application/json',
-        'Cookie': request.headers.get('cookie') || '',
+        "content-type": "application/json",
+        ...(bearer ? { authorization: bearer } : {}),
       },
-      body: JSON.stringify(body),
+      body: bodyText,
     });
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    const text = await r.text();
+    return new NextResponse(text, {
+      status: r.status,
+      headers: { "content-type": r.headers.get("content-type") ?? "application/json" },
+    });
   } catch (error) {
-    console.error('API proxy error:', error);
-    return NextResponse.json(
-      { success: false, message: 'Server error' },
-      { status: 500 }
-    );
+    console.error("API proxy /api/settings PUT error:", error);
+    return NextResponse.json({ success: false, message: "Server error" }, { status: 500 });
   }
 }

@@ -14,23 +14,29 @@ router.get('/', async (req, res) => {
       settingsObj[setting.key] = setting.value;
     });
 
-    // Add default service page hero image if not set
+    // existing default
     if (!settingsObj.service_page_hero_image) {
       settingsObj.service_page_hero_image = '/assets/service-traditional.jpg';
     }
 
-    res.json({
-      success: true,
-      data: settingsObj,
-    });
+    // ✅ NEW: sensible defaults for Gallery page hero (optional)
+    if (!settingsObj.gallery_page_hero_image) {
+      settingsObj.gallery_page_hero_image = ''; // no default image
+    }
+    if (!settingsObj.gallery_page_hero_title) {
+      settingsObj.gallery_page_hero_title = 'Gallery';
+    }
+    if (!settingsObj.gallery_page_hero_subtitle) {
+      settingsObj.gallery_page_hero_subtitle = 'Explore our ambience, rooms, and wellness experience.';
+    }
+
+    res.json({ success: true, data: settingsObj });
   } catch (error) {
     console.error('Get settings error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error',
-    });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
 
 // Get setting by key (public)
 router.get('/:key', async (req, res) => {

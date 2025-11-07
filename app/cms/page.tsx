@@ -23,18 +23,35 @@ export default function CMSLoginPage() {
     setError("");
 
     try {
-      const response = await AuthService.login(email, password);
+      // IMPORTANT: call the Next proxy so cookies are set on 3000
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-      if (response.success && response.data) {
-        // Store token and admin data
-        AuthService.setToken(response.data.token, response.data.admin);
+      const json = await res.json();
 
-        // Redirect to dashboard
-        router.push("/cms/dashboard");
-      } else {
-        setError(response.message || "Login failed");
+      if (!res.ok || !json?.success) {
+        setError(json?.message || "Login failed");
+        setIsLoading(false);
+        return;
       }
-    } catch (error) {
+
+      // Cookies (auth_token at /, cms_token at /cms) are now set by the proxy.
+      // If you still want to keep local state for admin/token, keep this:
+      try {
+        if (json?.data?.token && json?.data?.admin) {
+          // safe no-op if your AuthService expects this
+          AuthService.setToken?.(json.data.token, json.data.admin);
+        }
+      } catch {
+        // ignore if AuthService not available or not needed
+      }
+
+      // Redirect to dashboard
+      router.push("/cms/dashboard");
+    } catch (_err) {
       setError("Network error. Please check if the backend server is running.");
     } finally {
       setIsLoading(false);
@@ -105,13 +122,7 @@ export default function CMSLoginPage() {
             </Button>
           </form>
 
-          <div className="mt-6 p-4 bg-muted rounded-lg">
-            {/* <p className="text-sm text-muted-foreground text-center">
-              <strong>Demo Credentials:</strong><br />
-              Email: admin@Velorathai.com<br />
-              Password: admin123
-            </p> */}
-          </div>
+          <div className="mt-6 p-4 bg-muted rounded-lg">{/* helper block */}</div>
         </CardContent>
       </Card>
     </div>

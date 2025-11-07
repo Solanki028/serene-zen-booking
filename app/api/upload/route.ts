@@ -3,53 +3,65 @@ import { NextRequest, NextResponse } from 'next/server'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic' // ensure route is built in dev/prod
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000'
+const BACKEND_URL =
+  process.env.BACKEND_URL?.replace(/\/+$/, '') || 'http://localhost:5000'
 
-// safe JSON parse
-async function parseJsonSafe(res: Response) {
-  const txt = await res.text()
-  try { return JSON.parse(txt) } catch { return { message: txt || res.statusText } }
+// Build Authorization from header if present, else from cookies
+function getBearer(req: NextRequest): string | null {
+  // 1) Already provided as a header?
+  const h = req.headers.get('authorization')
+  if (h && h.trim()) return h.trim()
+
+  // 2) Otherwise synthesize from cookies (auth_token at Path=/, cms_token at /cms)
+  const names = [
+    'auth_token',   // root cookie we added on login
+    'cms_token',
+    'token',
+    'admin_token',
+    'adminToken',
+    'access_token',
+    'jwt',
+  ]
+  for (const n of names) {
+    const v = req.cookies.get(n)?.value?.trim()
+    if (v) return /^Bearer\s+/i.test(v) ? v : `Bearer ${v}`
+  }
+  return null
+}
+
+// Optional health check
+export async function GET() {
+  return NextResponse.json({ ok: true, route: '/api/upload' })
 }
 
 export async function POST(request: NextRequest) {
   try {
-    // stream form-data + forward auth + content-type (boundary)
+    // Read the incoming multipart form. Let fetch set the boundary automatically.
+    const form = await request.formData()
+
+    // Build Authorization header (from header or cookies)
+    const bearer = getBearer(request)
+
     const resp = await fetch(`${BACKEND_URL}/api/upload/image`, {
       method: 'POST',
-      headers: {
-        Authorization: request.headers.get('authorization') || '',
-        Cookie: request.headers.get('cookie') || '',
-        'Content-Type': request.headers.get('content-type') || '', // keep boundary
-      },
-      body: request.body,
+      headers: bearer ? { authorization: bearer } : undefined,
+      body: form,
       // @ts-expect-error node streaming flag
       duplex: 'half',
     })
 
-    const data = await parseJsonSafe(resp)
+    const contentType = resp.headers.get('content-type') ?? 'application/json'
+    const text = await resp.text()
 
-    if (resp.ok) {
-      const url =
-        data?.url ??
-        data?.data?.url ??
-        data?.secure_url ??
-        data?.data?.secure_url ?? null
-
-      if (!url) {
-        return NextResponse.json({ message: 'Upload OK but no URL', raw: data }, { status: 200 })
-      }
-      return NextResponse.json({ url }, { status: 200 })
-    }
-
-    const status = resp.status
-    let message = data?.message || data?.error || resp.statusText || 'Upload failed'
-    if (status === 413) message = 'Image too large.'
-    else if (status === 415) message = 'Unsupported media type.'
-    else if (status === 400 || status === 422) message = `Invalid image: ${message}`
-    else if (status >= 500) message = 'Server error during upload.'
-    return NextResponse.json({ message }, { status })
+    return new NextResponse(text, {
+      status: resp.status,
+      headers: { 'content-type': contentType },
+    })
   } catch (err) {
     console.error('Proxy /api/upload error:', err)
-    return NextResponse.json({ message: 'Gateway error while forwarding upload' }, { status: 502 })
+    return NextResponse.json(
+      { message: 'Gateway error while forwarding upload' },
+      { status: 502 }
+    )
   }
 }

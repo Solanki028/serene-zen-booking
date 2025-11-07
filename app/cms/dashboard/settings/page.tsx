@@ -264,6 +264,86 @@ export default function SettingsManagement() {
           </CardContent>
         </Card>
 
+
+
+{/* Gallery Page Hero Image */}
+<Card>
+  <CardHeader>
+    <CardTitle>Gallery Page Hero Image</CardTitle>
+    <CardDescription>
+      Background image and text for the Gallery page hero section
+    </CardDescription>
+  </CardHeader>
+  <CardContent className="space-y-6">
+    {/* Image URL + Upload */}
+    <div className="space-y-2">
+      <Label htmlFor="gallery_page_hero_image">Hero Image URL</Label>
+      <div className="flex gap-2">
+        <Input
+          id="gallery_page_hero_image"
+          value={settings.gallery_page_hero_image || ""}
+          onChange={(e) => updateSetting("gallery_page_hero_image", e.target.value)}
+          placeholder="https://res.cloudinary.com/.../gallery-hero.jpg"
+        />
+        <Button
+          variant="outline"
+          size="sm"
+          type="button"
+          onClick={() => document.getElementById("galleryHeroImageInput")?.click()}
+        >
+          <Upload className="h-4 w-4 mr-2" />
+          Upload
+        </Button>
+      </div>
+      <input
+        id="galleryHeroImageInput"
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={async (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          try {
+            const { url } = await apiService.uploadImage(file);
+            updateSetting("gallery_page_hero_image", url);
+          } catch (error: any) {
+            console.error("Upload failed:", error);
+            alert(error?.message || "Failed to upload image");
+          } finally {
+            // reset file input so choosing the same file again re-triggers change
+            (e.target as HTMLInputElement).value = "";
+          }
+        }}
+      />
+    </div>
+
+    {/* Optional Title/Sub-title (shown over the hero) */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-2">
+        <Label htmlFor="gallery_page_hero_title">Hero Title</Label>
+        <Input
+          id="gallery_page_hero_title"
+          value={settings.gallery_page_hero_title || ""}
+          onChange={(e) => updateSetting("gallery_page_hero_title", e.target.value)}
+          placeholder="Gallery"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="gallery_page_hero_subtitle">Hero Subtitle</Label>
+        <Input
+          id="gallery_page_hero_subtitle"
+          value={settings.gallery_page_hero_subtitle || ""}
+          onChange={(e) => updateSetting("gallery_page_hero_subtitle", e.target.value)}
+          placeholder="Explore our ambience, rooms, and wellness experience."
+        />
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
+
+
+
         {/* SEO & Meta Information */}
         <Card>
           <CardHeader>

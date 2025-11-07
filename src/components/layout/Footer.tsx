@@ -3,29 +3,54 @@ import { MapPin, Phone, Clock, Mail } from "lucide-react";
 
 export const Footer = () => {
   return (
-    <footer className="bg-primary text-primary-foreground mt-24">
+    <footer className="relative mt-24 bg-[#0b132b] text-white">
+      {/* subtle top glow */}
+      <div className="pointer-events-none absolute -top-10 left-1/2 h-20 w-[60%] -translate-x-1/2 rounded-full bg-white/5 blur-2xl" />
+
       <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        {/* elegant divider under brand row */}
+        <div className="mx-auto mb-10 h-[2px] w-24 rounded-full bg-gradient-to-r from-transparent via-white/70 to-transparent" />
+
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand & Contact */}
           <div>
-            <h3 className="text-2xl font-serif font-bold mb-4">Velora Thai Spa</h3>
-            <p className="text-sm opacity-90 mb-6">
+            <h3 className="playfair-heading text-2xl font-bold tracking-[-0.2px] mb-3">
+              Velora Thai Spa
+            </h3>
+            <p className="playfair-heading text-sm text-white/80 mb-6">
               Authentic Thai massage and holistic wellness since 2008.
             </p>
+
             <div className="space-y-3 text-sm">
-              <div className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                <span className="opacity-90">123 Wellness Street, Downtown District</span>
+              <div className="flex items-start gap-3">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15">
+                  <MapPin className="h-3.5 w-3.5" />
+                </span>
+                <span className="text-white/85">
+                  123 Wellness Street, Downtown District
+                </span>
               </div>
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 flex-shrink-0" />
-                <a href="tel:+1234567890" className="opacity-90 hover:opacity-100 transition-opacity">
+
+              <div className="flex items-center gap-3">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15">
+                  <Phone className="h-3.5 w-3.5" />
+                </span>
+                <a
+                  href="tel:+1234567890"
+                  className="text-white/85 hover:text-white transition-colors"
+                >
                   +1 (234) 567-890
                 </a>
               </div>
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 flex-shrink-0" />
-                <a href="mailto:info@Velorathai.com" className="opacity-90 hover:opacity-100 transition-opacity">
+
+              <div className="flex items-center gap-3">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15">
+                  <Mail className="h-3.5 w-3.5" />
+                </span>
+                <a
+                  href="mailto:info@Velorathai.com"
+                  className="text-white/85 hover:text-white transition-colors"
+                >
                   info@Velorathai.com
                 </a>
               </div>
@@ -34,25 +59,39 @@ export const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
+            <h4 className="playfair-heading text-lg font-semibold mb-4">
+              Quick Links
+            </h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/ourservices" className="opacity-90 hover:opacity-100 transition-opacity">
+                <Link
+                  href="/ourservices"
+                  className="text-white/80 hover:text-white transition-colors"
+                >
                   Our Services
                 </Link>
               </li>
               <li>
-                <Link href="/membership" className="opacity-90 hover:opacity-100 transition-opacity">
+                <Link
+                  href="/membership"
+                  className="text-white/80 hover:text-white transition-colors"
+                >
                   Membership
                 </Link>
               </li>
               <li>
-                <Link href="/giftvoucher" className="opacity-90 hover:opacity-100 transition-opacity">
+                <Link
+                  href="/giftvoucher"
+                  className="text-white/80 hover:text-white transition-colors"
+                >
                   Gift Vouchers
                 </Link>
               </li>
               <li>
-                <Link href="/aboutus" className="opacity-90 hover:opacity-100 transition-opacity">
+                <Link
+                  href="/aboutus"
+                  className="text-white/80 hover:text-white transition-colors"
+                >
                   About Us
                 </Link>
               </li>
@@ -61,13 +100,17 @@ export const Footer = () => {
 
           {/* Hours */}
           <div>
-            <h4 className="font-semibold mb-4">Opening Hours</h4>
-            <div className="space-y-2 text-sm opacity-90">
-              <div className="flex items-start gap-2">
-                <Clock className="h-4 w-4 mt-0.5 flex-shrink-0" />
+            <h4 className="playfair-heading text-lg font-semibold mb-4">
+              Opening Hours
+            </h4>
+            <div className="space-y-3 text-sm text-white/85">
+              <div className="flex items-start gap-3">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15">
+                  <Clock className="h-3.5 w-3.5" />
+                </span>
                 <div>
-                  <div>Mon - Fri: 10:00 AM - 9:00 PM</div>
-                  <div>Sat - Sun: 9:00 AM - 10:00 PM</div>
+                  <div>Mon – Fri: 10:00 AM – 9:00 PM</div>
+                  <div>Sat – Sun: 9:00 AM – 10:00 PM</div>
                 </div>
               </div>
             </div>
@@ -75,31 +118,52 @@ export const Footer = () => {
 
           {/* Social & Legal */}
           <div>
-            <h4 className="font-semibold mb-4">Follow Us</h4>
-            <div className="flex gap-4 mb-6">
-              <a href="#" className="opacity-90 hover:opacity-100 transition-opacity">
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            <h4 className="playfair-heading text-lg font-semibold mb-4">
+              Follow Us
+            </h4>
+
+            <div className="flex gap-3 mb-6">
+              {/* FB */}
+              <a
+                href="#"
+                aria-label="Facebook"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15 text-white/90 hover:bg-white/20 transition"
+              >
+                <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M22 12.06C22 6.495 17.523 2 12 2S2 6.495 2 12.06c0 4.99 3.657 9.133 8.438 9.94v-7.03H7.898v-2.91h2.54V9.845c0-2.507 1.492-3.89 3.777-3.89 1.094 0 2.238.196 2.238.196v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562v1.875h2.773l-.443 2.91h-2.33v7.03C18.343 21.193 22 17.05 22 12.06Z" />
                 </svg>
               </a>
-              <a href="#" className="opacity-90 hover:opacity-100 transition-opacity">
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+
+              {/* IG */}
+              <a
+                href="#"
+                aria-label="Instagram"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15 text-white/90 hover:bg-white/20 transition"
+              >
+                <svg className="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2.2c3.24 0 3.63.012 4.9.071 3.01.139 4.417 1.53 4.556 4.556.059 1.268.071 1.66.071 4.903s-.012 3.635-.071 4.903c-.139 3.02-1.54 4.417-4.556 4.556-1.268.059-1.66.071-4.9.071s-3.632-.012-4.9-.071c-3.02-.139-4.417-1.54-4.556-4.556C2.585 15.999 2.573 15.607 2.573 12.46s.012-3.635.071-4.903C2.783 4.53 4.17 3.134 7.19 2.995 8.458 2.936 8.86 2.924 12 2.924Zm0 1.8c-3.2 0-3.576.011-4.838.069-2.31.106-3.374 1.16-3.48 3.48-.058 1.262-.069 1.639-.069 4.838s.011 3.576.069 4.838c.106 2.31 1.17 3.374 3.48 3.48 1.262.058 1.638.069 4.838.069s3.576-.011 4.838-.069c2.31-.106 3.374-1.17 3.48-3.48.058-1.262.069-1.638.069-4.838s-.011-3.576-.069-4.838c-.106-2.32-1.17-3.374-3.48-3.48-1.262-.058-1.638-.069-4.838-.069Zm0 3.4a5.6 5.6 0 1 1 0 11.2 5.6 5.6 0 0 1 0-11.2Zm0 1.8a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Zm5.05-3.02a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8Z" />
                 </svg>
               </a>
             </div>
+
             <div className="text-sm space-y-1">
-              <Link href="/privacypolicy" className="block opacity-90 hover:opacity-100 transition-opacity">
+              <Link
+                href="/privacypolicy"
+                className="block text-white/80 hover:text-white transition-colors"
+              >
                 Privacy Policy
               </Link>
-              <Link href="/termsandservice" className="block opacity-90 hover:opacity-100 transition-opacity">
+              <Link
+                href="/termsandservice"
+                className="block text-white/80 hover:text-white transition-colors"
+              >
                 Terms & Services
               </Link>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/20 mt-12 pt-8 text-center text-sm opacity-75">
+        <div className="border-t border-white/15 mt-12 pt-8 text-center text-sm text-white/70">
           © {new Date().getFullYear()} Velora Thai Spa. All rights reserved.
         </div>
       </div>
