@@ -31,6 +31,53 @@ export default function ArticleDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (article) {
+      // Set page-specific metadata
+      document.title = `${article.title} - Velora Thai Spa`;
+
+      // Update or create meta tags
+      const updateMetaTag = (name: string, content: string, property = false) => {
+        const attribute = property ? 'property' : 'name';
+        let meta = document.querySelector(`meta[${attribute}="${name}"]`) as HTMLMetaElement;
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute(attribute, name);
+          document.head.appendChild(meta);
+        }
+        meta.content = content;
+      };
+
+      // Basic meta tags
+      updateMetaTag('description', article.excerpt || `Read ${article.title} by ${article.author} at Velora Thai Spa.`);
+      updateMetaTag('keywords', `wellness, spa, ${article.category.name}, ${article.tags?.join(', ') || ''}, ${article.author}`);
+
+      // Open Graph tags
+      updateMetaTag('og:title', `${article.title} - Velora Thai Spa`, true);
+      updateMetaTag('og:description', article.excerpt || `Read ${article.title} by ${article.author} at Velora Thai Spa.`, true);
+      updateMetaTag('og:url', `/articles/${article.category.slug}/${article.slug}`, true);
+      updateMetaTag('og:site_name', "Velora Thai Spa", true);
+      updateMetaTag('og:image', article.featuredImage || "/assets/hero-spa.jpg", true);
+      updateMetaTag('og:image:width', "1200", true);
+      updateMetaTag('og:image:height', "630", true);
+      updateMetaTag('og:image:alt', `Article: ${article.title} - Velora Thai Spa`, true);
+      updateMetaTag('og:type', "article", true);
+      updateMetaTag('article:author', article.author, true);
+      updateMetaTag('article:published_time', article.publishedAt, true);
+
+      // Twitter Card tags
+      updateMetaTag('twitter:card', "summary_large_image");
+      updateMetaTag('twitter:title', `${article.title} - Velora Thai Spa`);
+      updateMetaTag('twitter:description', article.excerpt || `Read ${article.title} by ${article.author} at Velora Thai Spa.`);
+      updateMetaTag('twitter:image', article.featuredImage || "/assets/hero-spa.jpg");
+
+      // Cleanup function to reset to default when component unmounts
+      return () => {
+        document.title = "Velora Thai Spa - Premium Wellness & Massage Services";
+      };
+    }
+  }, [article]);
+
+  useEffect(() => {
     const loadArticle = async () => {
       try {
         const categorySlug = params.categorySlug as string;
@@ -87,24 +134,24 @@ export default function ArticleDetailPage() {
         </div>
       </Layout>
     );
-  }
+  };
 
-  if (!article) {
-    return (
-      <Layout>
-        <div className="min-h-screen bg-[#fdfbf7] flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-3xl font-serif font-bold text-gray-900 mb-4">Article Not Found</h1>
-            <Link href="/articles" className="text-[#b48c52] hover:underline">
-              ← Back to Articles
-            </Link>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
+ if (!article) {
+   return (
+     <Layout>
+       <div className="min-h-screen bg-[#fdfbf7] flex items-center justify-center">
+         <div className="text-center">
+           <h1 className="text-3xl font-serif font-bold text-gray-900 mb-4">Article Not Found</h1>
+           <Link href="/articles" className="text-[#b48c52] hover:underline">
+             ← Back to Articles
+           </Link>
+         </div>
+       </div>
+     </Layout>
+   );
+ }
 
-  return (
+ return (
     <Layout>
       <div className="min-h-screen bg-[#fdfbf7] py-12">
         <div className="max-w-4xl mx-auto px-4">

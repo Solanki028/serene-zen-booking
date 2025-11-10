@@ -16,9 +16,51 @@ interface Membership {
   popular?: boolean;
 }
 
-export default function MembershipPage() {
+const MembershipPage = () => {
   const [memberships, setMemberships] = useState<Membership[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Set page-specific metadata
+    document.title = "Membership - Velora Thai Spa | Exclusive Wellness Membership Plans";
+
+    // Update or create meta tags
+    const updateMetaTag = (name: string, content: string, property = false) => {
+      const attribute = property ? 'property' : 'name';
+      let meta = document.querySelector(`meta[${attribute}="${name}"]`) as HTMLMetaElement;
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attribute, name);
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    };
+
+    // Basic meta tags
+    updateMetaTag('description', "Join Velora Thai Spa's exclusive membership program for unlimited access to premium wellness treatments. Flexible plans, priority booking, and special member benefits.");
+    updateMetaTag('keywords', "spa membership, wellness membership, thai spa membership, premium treatments, exclusive benefits");
+
+    // Open Graph tags
+    updateMetaTag('og:title', "Membership - Velora Thai Spa | Exclusive Wellness Membership Plans", true);
+    updateMetaTag('og:description', "Join Velora Thai Spa's exclusive membership program for unlimited access to premium wellness treatments.", true);
+    updateMetaTag('og:url', "/membership", true);
+    updateMetaTag('og:site_name', "Velora Thai Spa", true);
+    updateMetaTag('og:image', "/assets/hero-spa.jpg", true);
+    updateMetaTag('og:image:width', "1200", true);
+    updateMetaTag('og:image:height', "630", true);
+    updateMetaTag('og:image:alt', "Velora Thai Spa Exclusive Membership Plans", true);
+
+    // Twitter Card tags
+    updateMetaTag('twitter:card', "summary_large_image");
+    updateMetaTag('twitter:title', "Membership - Velora Thai Spa | Exclusive Wellness Membership Plans");
+    updateMetaTag('twitter:description', "Join Velora Thai Spa's exclusive membership program for unlimited access to premium wellness treatments.");
+    updateMetaTag('twitter:image', "/assets/hero-spa.jpg");
+
+    // Cleanup function to reset to default when component unmounts
+    return () => {
+      document.title = "Velora Thai Spa - Premium Wellness & Massage Services";
+    };
+  }, []);
 
   useEffect(() => {
     const loadMemberships = async () => {
@@ -53,9 +95,9 @@ export default function MembershipPage() {
         </div>
       </Layout>
     );
-  }
+  };
 
-  return (
+ return (
     <Layout>
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-purple-50 relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -217,4 +259,6 @@ export default function MembershipPage() {
       </div>
     </Layout>
   );
-}
+};
+
+export default MembershipPage;

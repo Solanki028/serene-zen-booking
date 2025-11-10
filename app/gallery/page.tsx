@@ -1,13 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Layout } from "@/components/layout/Layout";
-
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
-export const metadata = {
-  title: "Gallery | Velora Thai Spa",
-  description: "Relaxing ambiance and spa interiors — photo gallery.",
-};
+import { useEffect, useState } from "react";
 
 type GalleryImage = {
   _id: string;
@@ -40,60 +35,46 @@ type Settings = {
   gallery_page_hero_subtitle?: string;
 };
 
-async function fetchJSON(url: string) {
-  const res = await fetch(url, { cache: "no-store", next: { revalidate: 0 } });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const text = await res.text();
-  return JSON.parse(text);
-}
-
-async function fetchSettings(): Promise<Settings> {
-  try {
-    const j = await fetchJSON(`/api/settings`);
-    return (j?.data ?? {}) as Settings;
-  } catch {
-    const BACKEND =
-      process.env.BACKEND_URL?.replace(/\/+$/, "") || "http://localhost:5000";
-    const j = await fetchJSON(`${BACKEND}/api/settings`);
-    return (j?.data ?? {}) as Settings;
-  }
-}
-
-async function fetchGallery(page: number, limit: number, tag?: string) {
-  const qs = new URLSearchParams();
-  qs.set("page", String(page));
-  qs.set("limit", String(limit));
-  if (tag) qs.set("tag", tag);
-
-  try {
-    return (await fetchJSON(
-      `/api/gallery/public?${qs.toString()}`
-    )) as GalleryResponse;
-  } catch {
-    const BACKEND =
-      process.env.BACKEND_URL?.replace(/\/+$/, "") || "http://localhost:5000";
-    return (await fetchJSON(
-      `${BACKEND}/api/gallery/public?${qs.toString()}`
-    )) as GalleryResponse;
-  }
-}
-
 import GalleryGrid from "./GalleryGrid";
 
-export default async function GalleryPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string; tag?: string }>;
-}) {
-  const sp = await searchParams;
-  const page = Math.max(Number(sp?.page ?? 1) || 1, 1);
-  const limit = 30;
-  const tag = sp?.tag;
+function GalleryPageContent() {
+  const [settings, setSettings] = useState<Settings>({});
+  const [data, setData] = useState<GalleryResponse | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const [settings, data] = await Promise.all([
-    fetchSettings(),
-    fetchGallery(page, limit, tag).catch(() => null),
-  ]);
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        // Fetch settings
+        try {
+          const settingsRes = await fetch('/api/settings');
+          if (settingsRes.ok) {
+            const settingsData = await settingsRes.json();
+            setSettings(settingsData?.data ?? {});
+          }
+        } catch (error) {
+          console.error('Settings fetch error:', error);
+        }
+
+        // Fetch gallery data
+        try {
+          const galleryRes = await fetch('/api/gallery/public?page=1&limit=30');
+          if (galleryRes.ok) {
+            const galleryData = await galleryRes.json();
+            setData(galleryData);
+          }
+        } catch (error) {
+          console.error('Gallery fetch error:', error);
+        }
+      } catch (error) {
+        console.error('Data loading error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
 
   const heroUrl = settings.gallery_page_hero_image?.trim() || "";
   const heroTitle = (settings.gallery_page_hero_title || "Gallery").trim();
@@ -103,8 +84,65 @@ export default async function GalleryPage({
 
   const items = data?.data ?? [];
   const totalPages = data?.pagination?.totalPages ?? 1;
-  const hasPrev = page > 1;
-  const hasNext = page < totalPages;
+  const hasPrev = false; // For page 1
+  const hasNext = totalPages > 1;
+
+  useEffect(() => {
+    if (!loading) {
+      // Set page-specific metadata
+      document.title = heroTitle;
+
+      // Update or create meta tags
+      const updateMetaTag = (name: string, content: string, property = false) => {
+        const attribute = property ? 'property' : 'name';
+        let meta = document.querySelector(`meta[${attribute}="${name}"]`) as HTMLMetaElement;
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute(attribute, name);
+          document.head.appendChild(meta);
+        }
+        meta.content = content;
+      };
+
+      // Basic meta tags
+      updateMetaTag('description', heroSubtitle);
+      updateMetaTag('keywords', 'spa gallery, wellness photos, massage rooms, spa ambience, velora thai spa');
+
+      // Open Graph tags
+      updateMetaTag('og:title', heroTitle, true);
+      updateMetaTag('og:description', heroSubtitle, true);
+      updateMetaTag('og:url', '/gallery', true);
+      updateMetaTag('og:site_name', "Velora Thai Spa", true);
+      updateMetaTag('og:image', heroUrl || "/assets/hero-spa.jpg", true);
+      updateMetaTag('og:image:width', "1200", true);
+      updateMetaTag('og:image:height', "630", true);
+      updateMetaTag('og:image:alt', `Velora Thai Spa Gallery - ${heroTitle}`, true);
+
+      // Twitter Card tags
+      updateMetaTag('twitter:card', "summary_large_image");
+      updateMetaTag('twitter:title', heroTitle);
+      updateMetaTag('twitter:description', heroSubtitle);
+      updateMetaTag('twitter:image', heroUrl || "/assets/hero-spa.jpg");
+
+      // Cleanup function to reset to default when component unmounts
+      return () => {
+        document.title = "Velora Thai Spa - Premium Wellness & Massage Services";
+      };
+    }
+  }, [heroTitle, heroSubtitle, heroUrl, loading]);
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading gallery...</p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -163,7 +201,7 @@ export default async function GalleryPage({
 
         {!data && (
           <div className="mt-10 border rounded-xl p-10 text-center">
-            <div className="text-lg font-medium">Couldn&apos;t load gallery</div>
+            <div className="text-lg font-medium">Couldn't load gallery</div>
             <div className="text-sm text-muted-foreground mt-1">
               Please refresh the page or try again later.
             </div>
@@ -194,7 +232,7 @@ export default async function GalleryPage({
             <Link
               href={{
                 pathname: "/gallery",
-                query: { ...(tag ? { tag } : {}), page: hasPrev ? page - 1 : 1 },
+                query: { page: hasPrev ? 1 - 1 : 1 },
               }}
               className={`px-4 py-2 rounded-md border text-sm ${
                 hasPrev
@@ -206,14 +244,13 @@ export default async function GalleryPage({
               Prev
             </Link>
             <span className="text-sm text-muted-foreground">
-              Page {page} of {totalPages}
+              Page 1 of {totalPages}
             </span>
             <Link
               href={{
                 pathname: "/gallery",
                 query: {
-                  ...(tag ? { tag } : {}),
-                  page: hasNext ? page + 1 : totalPages,
+                  page: hasNext ? 1 + 1 : totalPages,
                 },
               }}
               className={`px-4 py-2 rounded-md border text-sm ${
@@ -230,4 +267,8 @@ export default async function GalleryPage({
       </div>
     </Layout>
   );
+}
+
+export default function GalleryPage() {
+  return <GalleryPageContent />;
 }

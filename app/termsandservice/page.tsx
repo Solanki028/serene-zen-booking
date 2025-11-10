@@ -1,9 +1,48 @@
 "use client";
 
+import { useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 
 const TermsAndServicePage = () => {
+  useEffect(() => {
+    // Set page-specific metadata
+    document.title = "Terms & Services - Velora Thai Spa | Service Terms & Conditions";
+
+    // Update or create meta tags
+    const updateMetaTag = (name: string, content: string, property = false) => {
+      const attribute = property ? 'property' : 'name';
+      let meta = document.querySelector(`meta[${attribute}="${name}"]`) as HTMLMetaElement;
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attribute, name);
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    };
+
+    // Basic meta tags
+    updateMetaTag('description', "Read Velora Thai Spa's terms and services. Learn about booking policies, cancellation terms, health and safety guidelines, and membership conditions.");
+    updateMetaTag('keywords', "terms and services, booking policy, cancellation policy, spa terms, service conditions");
+
+    // Open Graph tags
+    updateMetaTag('og:title', "Terms & Services - Velora Thai Spa | Service Terms & Conditions", true);
+    updateMetaTag('og:description', "Read Velora Thai Spa's terms and services including booking policies, cancellation terms, and membership conditions.", true);
+    updateMetaTag('og:url', "/termsandservice", true);
+    updateMetaTag('og:site_name', "Velora Thai Spa", true);
+    updateMetaTag('og:type', "website", true);
+
+    // Twitter Card tags
+    updateMetaTag('twitter:card', "summary");
+    updateMetaTag('twitter:title', "Terms & Services - Velora Thai Spa | Service Terms & Conditions");
+    updateMetaTag('twitter:description', "Read Velora Thai Spa's terms and services including booking policies, cancellation terms, and membership conditions.");
+
+    // Cleanup function to reset to default when component unmounts
+    return () => {
+      document.title = "Velora Thai Spa - Premium Wellness & Massage Services";
+    };
+  }, []);
+
   return (
     <Layout>
       <div className="py-16 md:py-24">
@@ -100,7 +139,7 @@ const TermsAndServicePage = () => {
         </div>
       </div>
     </Layout>
-  );
+);
 };
 
 export default TermsAndServicePage;

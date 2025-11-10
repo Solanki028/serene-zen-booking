@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,6 +11,48 @@ const GiftVoucherPage = () => {
   const [selectedAmount, setSelectedAmount] = useState<number>(100);
 
   const denominations = [50, 100, 150, 200, 250, 300];
+
+  useEffect(() => {
+    // Set page-specific metadata
+    document.title = "Gift Vouchers - Velora Thai Spa | Perfect Wellness Gifts";
+
+    // Update or create meta tags
+    const updateMetaTag = (name: string, content: string, property = false) => {
+      const attribute = property ? 'property' : 'name';
+      let meta = document.querySelector(`meta[${attribute}="${name}"]`) as HTMLMetaElement;
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attribute, name);
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    };
+
+    // Basic meta tags
+    updateMetaTag('description', "Give the perfect gift of wellness with Velora Thai Spa gift vouchers. Beautifully designed, flexible amounts, and never expire. Perfect for birthdays, anniversaries, and special occasions.");
+    updateMetaTag('keywords', "gift vouchers, spa gifts, wellness gifts, thai spa gift cards, massage gift certificates");
+
+    // Open Graph tags
+    updateMetaTag('og:title', "Gift Vouchers - Velora Thai Spa | Perfect Wellness Gifts", true);
+    updateMetaTag('og:description', "Give the perfect gift of wellness with Velora Thai Spa gift vouchers. Beautifully designed, flexible amounts, and never expire.", true);
+    updateMetaTag('og:url', "/giftvoucher", true);
+    updateMetaTag('og:site_name', "Velora Thai Spa", true);
+    updateMetaTag('og:image', "/assets/hero-spa.jpg", true);
+    updateMetaTag('og:image:width', "1200", true);
+    updateMetaTag('og:image:height', "630", true);
+    updateMetaTag('og:image:alt', "Velora Thai Spa Gift Vouchers - Perfect Wellness Gifts", true);
+
+    // Twitter Card tags
+    updateMetaTag('twitter:card', "summary_large_image");
+    updateMetaTag('twitter:title', "Gift Vouchers - Velora Thai Spa | Perfect Wellness Gifts");
+    updateMetaTag('twitter:description', "Give the perfect gift of wellness with Velora Thai Spa gift vouchers. Beautifully designed, flexible amounts, and never expire.");
+    updateMetaTag('twitter:image', "/assets/hero-spa.jpg");
+
+    // Cleanup function to reset to default when component unmounts
+    return () => {
+      document.title = "Velora Thai Spa - Premium Wellness & Massage Services";
+    };
+  }, []);
 
   const handleBuyVoucher = () => {
     window.open("https://Velorathaispa.zenoti.com", "_blank");

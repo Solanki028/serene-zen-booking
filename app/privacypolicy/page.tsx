@@ -1,9 +1,48 @@
 "use client";
 
+import { useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 
 const PrivacyPolicyPage = () => {
+  useEffect(() => {
+    // Set page-specific metadata
+    document.title = "Privacy Policy - Velora Thai Spa | Data Protection & Privacy";
+
+    // Update or create meta tags
+    const updateMetaTag = (name: string, content: string, property = false) => {
+      const attribute = property ? 'property' : 'name';
+      let meta = document.querySelector(`meta[${attribute}="${name}"]`) as HTMLMetaElement;
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attribute, name);
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    };
+
+    // Basic meta tags
+    updateMetaTag('description', "Learn about Velora Thai Spa's privacy policy and how we protect your personal information. We are committed to safeguarding your data and maintaining your trust.");
+    updateMetaTag('keywords', "privacy policy, data protection, personal information, privacy rights, data security");
+
+    // Open Graph tags
+    updateMetaTag('og:title', "Privacy Policy - Velora Thai Spa | Data Protection & Privacy", true);
+    updateMetaTag('og:description', "Learn about Velora Thai Spa's privacy policy and how we protect your personal information.", true);
+    updateMetaTag('og:url', "/privacypolicy", true);
+    updateMetaTag('og:site_name', "Velora Thai Spa", true);
+    updateMetaTag('og:type', "website", true);
+
+    // Twitter Card tags
+    updateMetaTag('twitter:card', "summary");
+    updateMetaTag('twitter:title', "Privacy Policy - Velora Thai Spa | Data Protection & Privacy");
+    updateMetaTag('twitter:description', "Learn about Velora Thai Spa's privacy policy and how we protect your personal information.");
+
+    // Cleanup function to reset to default when component unmounts
+    return () => {
+      document.title = "Velora Thai Spa - Premium Wellness & Massage Services";
+    };
+  }, []);
+
   return (
     <Layout>
       <div className="py-16 md:py-24">
@@ -73,7 +112,7 @@ const PrivacyPolicyPage = () => {
         </div>
       </div>
     </Layout>
-  );
+);
 };
 
 export default PrivacyPolicyPage;

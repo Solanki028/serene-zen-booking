@@ -6,37 +6,54 @@ import { Calendar, Clock, Plus, Minus, Leaf } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { BookingModal } from "@/components/ui/booking-modal";
 
-interface Category {
-  _id: string;
-  name: string;
-  slug: string;
-  description?: string;
-  order: number;
-}
-
-interface Service {
-  _id: string;
-  title: string;
-  category: Category;
-  shortDesc: string;
-  longDesc?: string;
-  benefits: string[];
-  durations: { minutes: number; price: number }[];
-  images: string[];
-  featured: boolean;
-}
-
-interface CategorizedServices {
-  category: Category;
-  services: Service[];
-}
-
-export default function EnhancedServicesPage() {
+const ServicesPage = () => {
   const [categorizedServices, setCategorizedServices] = useState<CategorizedServices[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [heroImage, setHeroImage] = useState<string>('');
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
+  useEffect(() => {
+    // Set page-specific metadata
+    document.title = "Our Services - Velora Thai Spa | Professional Massage & Wellness Treatments";
+
+    // Update or create meta tags
+    const updateMetaTag = (name: string, content: string, property = false) => {
+      const attribute = property ? 'property' : 'name';
+      let meta = document.querySelector(`meta[${attribute}="${name}"]`) as HTMLMetaElement;
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attribute, name);
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    };
+
+    // Basic meta tags
+    updateMetaTag('description', "Explore our comprehensive range of professional massage and wellness services at Velora Thai Spa. Traditional Thai massage, aromatherapy, deep tissue massage, foot reflexology, and signature spa treatments.");
+    updateMetaTag('keywords', "spa services, massage treatments, thai massage, aromatherapy, deep tissue massage, wellness treatments, spa packages");
+
+    // Open Graph tags
+    updateMetaTag('og:title', "Our Services - Velora Thai Spa | Professional Massage & Wellness Treatments", true);
+    updateMetaTag('og:description', "Explore our comprehensive range of professional massage and wellness services at Velora Thai Spa. Traditional Thai massage, aromatherapy, deep tissue massage, and more.", true);
+    updateMetaTag('og:url', "/ourservices", true);
+    updateMetaTag('og:site_name', "Velora Thai Spa", true);
+    updateMetaTag('og:image', "/assets/service-traditional.jpg", true);
+    updateMetaTag('og:image:width', "1200", true);
+    updateMetaTag('og:image:height', "630", true);
+    updateMetaTag('og:image:alt', "Professional Massage & Wellness Services at Velora Thai Spa", true);
+
+    // Twitter Card tags
+    updateMetaTag('twitter:card', "summary_large_image");
+    updateMetaTag('twitter:title', "Our Services - Velora Thai Spa | Professional Massage & Wellness Treatments");
+    updateMetaTag('twitter:description', "Explore our comprehensive range of professional massage and wellness services at Velora Thai Spa. Traditional Thai massage, aromatherapy, deep tissue massage, and more.");
+    updateMetaTag('twitter:image', "/assets/service-traditional.jpg");
+
+    // Cleanup function to reset to default when component unmounts
+    return () => {
+      document.title = "Velora Thai Spa - Premium Wellness & Massage Services";
+    };
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -79,8 +96,8 @@ export default function EnhancedServicesPage() {
           <div className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-emerald-50">
             <div className="max-w-7xl mx-auto px-6 py-24">
               <div className="text-center mb-20">
-                <div className="h-16 bg-gray-200 rounded-lg mb-6 mx-auto w-96 animate-pulse"></div>
-                <div className="h-6 bg-gray-200 rounded-lg mx-auto w-2/3 animate-pulse"></div>
+                <div className="h-16 bg-gray-200 rounded-lg mb-6 mx-auto w-96 animate-pulse" />
+                <div className="h-6 bg-gray-200 rounded-lg mx-auto w-2/3 animate-pulse" />
               </div>
               <div className="space-y-6">
                 {[...Array(5)].map((_, i) => (
@@ -110,7 +127,7 @@ export default function EnhancedServicesPage() {
               <div className="absolute top-10 left-10 w-64 h-64 bg-amber-400 rounded-full blur-3xl"></div>
               <div className="absolute bottom-10 right-10 w-96 h-96 bg-emerald-400 rounded-full blur-3xl"></div>
             </div>
-            
+
             <div className="relative max-w-7xl mx-auto px-6 text-center">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -174,7 +191,7 @@ export default function EnhancedServicesPage() {
                               {categoryGroup.category.description}
                             </p>
                           )}
-                          
+
                           {categoryGroup.services.map((service, serviceIndex) => (
                             <motion.div
                               key={service._id}
@@ -191,7 +208,7 @@ export default function EnhancedServicesPage() {
                                     alt={service.title}
                                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                                   />
-                                  <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent"></div>
+                                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-all duration-300" />
                                 </div>
 
                                 {/* Service Details */}
@@ -280,4 +297,32 @@ export default function EnhancedServicesPage() {
       />
     </>
   );
+};
+
+interface Category {
+  _id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  order: number;
 }
+
+interface Service {
+  _id: string;
+  title: string;
+  category: Category;
+  shortDesc: string;
+  longDesc?: string;
+  benefits: string[];
+  durations: { minutes: number; price: number }[];
+  images: string[];
+  featured: boolean;
+}
+
+interface CategorizedServices {
+  category: Category;
+  services: Service[];
+}
+
+export default ServicesPage;
+

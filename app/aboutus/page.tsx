@@ -1,10 +1,53 @@
 "use client";
 
+import { useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 
 const AboutUsPage = () => {
+  useEffect(() => {
+    // Set page-specific metadata
+    document.title = "About Us - Velora Thai Spa | Premium Wellness Experience";
+
+    // Update or create meta tags
+    const updateMetaTag = (name: string, content: string, property = false) => {
+      const attribute = property ? 'property' : 'name';
+      let meta = document.querySelector(`meta[${attribute}="${name}"]`) as HTMLMetaElement;
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attribute, name);
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    };
+
+    // Basic meta tags
+    updateMetaTag('description', "Discover Velora Thai Spa's story - 16+ years of wellness excellence, serving 20K+ happy clients with 30+ signature treatments. Experience traditional Thai massage and modern healing therapies.");
+    updateMetaTag('keywords', "about spa, wellness center, thai spa story, massage therapy, wellness experience, spa treatments");
+
+    // Open Graph tags
+    updateMetaTag('og:title', "About Us - Velora Thai Spa | Premium Wellness Experience", true);
+    updateMetaTag('og:description', "Discover Velora Thai Spa's story - 16+ years of wellness excellence, serving 20K+ happy clients with 30+ signature treatments.", true);
+    updateMetaTag('og:url', "/aboutus", true);
+    updateMetaTag('og:site_name', "Velora Thai Spa", true);
+    updateMetaTag('og:image', "/assets/hero-spa.jpg", true);
+    updateMetaTag('og:image:width', "1200", true);
+    updateMetaTag('og:image:height', "630", true);
+    updateMetaTag('og:image:alt', "About Velora Thai Spa - Premium Wellness Experience", true);
+
+    // Twitter Card tags
+    updateMetaTag('twitter:card', "summary_large_image");
+    updateMetaTag('twitter:title', "About Us - Velora Thai Spa | Premium Wellness Experience");
+    updateMetaTag('twitter:description', "Discover Velora Thai Spa's story - 16+ years of wellness excellence, serving 20K+ happy clients with 30+ signature treatments.");
+    updateMetaTag('twitter:image', "/assets/hero-spa.jpg");
+
+    // Cleanup function to reset to default when component unmounts
+    return () => {
+      document.title = "Velora Thai Spa - Premium Wellness & Massage Services";
+    };
+  }, []);
+
   return (
     <Layout>
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-purple-50 py-20 md:py-28 relative overflow-hidden">
@@ -82,7 +125,7 @@ const AboutUsPage = () => {
         </div>
       </div>
     </Layout>
-  );
+);
 };
 
 export default AboutUsPage;
