@@ -50,34 +50,41 @@ export default function NewArticleCategoryPage() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  // at top of file (if not already)
+// import { useToast } from "@/hooks/use-toast";
+// const { toast } = useToast();
 
-    try {
-      const response = await fetch('/api/article-categories', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${AuthService.getToken()}`,
-        },
-        body: JSON.stringify(formData),
-      });
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-      const result = await response.json();
+  try {
+    const res = await fetch("/api/article-categories", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${AuthService.getToken()}`,
+      },
+      body: JSON.stringify(formData),
+    });
 
-      if (result.success) {
-        router.push("/cms/dashboard/articles");
-      } else {
-        alert(result.message || 'Failed to create category');
-      }
-    } catch (error) {
-      console.error('Failed to create category:', error);
-      alert('Failed to create category');
-    } finally {
-      setIsSubmitting(false);
+    if (res.ok) {
+      // success: show toast (or use alert("Category created successfully"))
+      window.alert('Category created successfully.');
+      router.push("/cms/dashboard/articles/categories/added");
+    } else {
+      // read error body if available
+      const err = await res.json().catch(() => ({} as any));
+      throw new Error(err?.message || "Failed to create category");
     }
-  };
+  } catch (error: any) {
+    console.error("Failed to create category:", error);
+    window.alert(error?.message || 'Failed to create category');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   if (isLoading) {
     return (

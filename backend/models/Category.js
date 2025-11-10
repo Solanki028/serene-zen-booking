@@ -29,15 +29,16 @@ const categorySchema = new mongoose.Schema({
   timestamps: true,
 });
 
-// Pre-save middleware to generate slug from name
-categorySchema.pre('save', function(next) {
-  if (this.isModified('name')) {
-    this.slug = this.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '');
-  }
-  next();
-});
-
+ // Generate slug BEFORE validation so "required: true" passes
+ categorySchema.pre('validate', function(next) {
+   if (this.isModified('name') || !this.slug) {
+     if (this.name) {
+       this.slug = this.name
+         .toLowerCase()
+         .replace(/[^a-z0-9]+/g, '-')
+         .replace(/^-+|-+$/g, '');
+     }
+   }
+   next();
+ });
 export default mongoose.models.Category || mongoose.model('Category', categorySchema);

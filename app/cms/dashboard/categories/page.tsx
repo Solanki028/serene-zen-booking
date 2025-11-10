@@ -81,7 +81,7 @@ export default function CategoriesPage() {
 
       const data = await response.json();
 
-      if (data.success) {
+      if (response.ok) {
         toast({
           title: "Success",
           description: `Category ${editingCategory ? "updated" : "created"} successfully`,
@@ -93,10 +93,11 @@ export default function CategoriesPage() {
       } else {
         toast({
           title: "Error",
-          description: data.message || "Something went wrong",
+          description: data?.message || "Something went wrong",
           variant: "destructive",
         });
       }
+      
     } catch (error) {
       console.error("Error saving category:", error);
       toast({

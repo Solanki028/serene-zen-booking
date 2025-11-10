@@ -9,6 +9,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AuthService } from "@/lib/auth";
+// add this import
+import { useParams } from "next/navigation";
+
 import { useToast } from "@/hooks/use-toast";
 import {
   ArrowLeft,
@@ -24,8 +27,10 @@ interface ArticleCategory {
   order: number;
   isActive: boolean;
 }
+export default function EditCategoryPage() {
+  const p = useParams<{ slug: string }>();
+  const slug = Array.isArray(p.slug) ? p.slug[0] : p.slug
 
-export default function EditCategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,53 +42,56 @@ export default function EditCategoryPage({ params }: { params: Promise<{ slug: s
   });
   const router = useRouter();
   const { toast } = useToast();
+  const [categoryId, setCategoryId] = useState<string>('');
+
 
   useEffect(() => {
     const checkAuth = async () => {
       const authenticated = await AuthService.verifyToken();
       setIsAuthenticated(authenticated);
-
       if (!authenticated) {
         router.push("/cms");
         return;
       }
-
       await loadCategory();
       setIsLoading(false);
     };
-
     checkAuth();
-  }, [router, params]);
+    // include slug here, not params
+  }, [router, slug]);
 
   const loadCategory = async () => {
     try {
-      const { slug } = await params;
-      const response = await fetch(`/api/article-categories/${slug}`, {
-        headers: {
-          'Authorization': `Bearer ${AuthService.getToken()}`,
-        },
+      const res = await fetch(`/api/article-categories/admin`, {
+        headers: { Authorization: `Bearer ${AuthService.getToken()}` },
+        cache: "no-store",
       });
-
-      const data = await response.json();
-      console.log('Category data:', data); // Debug log
-
-      if (data && data.name) { // Backend returns category directly
-        setFormData({
-          name: data.name || '',
-          description: data.description || '',
-          order: data.order || 0,
-          isActive: data.isActive ?? true,
-        });
-      } else {
-        console.error('Invalid category data format:', data);
+      const payload = await res.json();
+  
+      const list: any[] = Array.isArray(payload) ? payload
+                        : Array.isArray(payload?.data) ? payload.data
+                        : [];
+  
+      const cat = list.find((c) => c?.slug === slug); // <-- use slug from hook
+  
+      if (!cat) {
         toast({
-          title: "Error",
-          description: "Invalid category data received.",
+          title: "Not found",
+          description: "Article category not found.",
           variant: "destructive",
         });
+        return;
       }
+  
+      setCategoryId(cat._id);
+      setFormData({
+        name: cat.name || "",
+        description: cat.description || "",
+        order: cat.order ?? 0,
+        isActive: cat.isActive ?? true,
+      });
     } catch (error) {
-      console.error('Failed to load category:', error);
+      console.error("Failed to load category:", error);
       toast({
         title: "Error",
         description: "Failed to load category data.",
@@ -91,6 +99,7 @@ export default function EditCategoryPage({ params }: { params: Promise<{ slug: s
       });
     }
   };
+  
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -101,26 +110,33 @@ export default function EditCategoryPage({ params }: { params: Promise<{ slug: s
     setIsSubmitting(true);
 
     try {
-      const { slug } = await params;
-      const response = await fetch(`/api/article-categories/${slug}`, {
+      if (!categoryId) {
+        toast({
+          title: "Error",
+          description: "Category id not resolved yet.",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+      
+      const response = await fetch(`/api/article-categories/${categoryId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${AuthService.getToken()}`,
+          Authorization: `Bearer ${AuthService.getToken()}`,
         },
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      // const data = await response.json();
 
-      if (data.success) {
-        toast({
-          title: "Success!",
-          description: "Category updated successfully.",
-        });
-        router.push("/cms/dashboard/articles/categories/added");
+      if (response.ok) {
+        toast({ title: 'Success!', description: 'Category updated successfully.' });
+        router.push('/cms/dashboard/articles/categories/added');
       } else {
-        throw new Error(data.message || 'Failed to update category');
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err?.message || 'Failed to update category');
       }
     } catch (error) {
       console.error('Failed to update category:', error);

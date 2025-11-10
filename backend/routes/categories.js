@@ -75,7 +75,18 @@ router.post('/', authenticateToken, requireAdmin, async (req, res) => {
 // Update category (admin only)
 router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
-    const { name, description, image, order, isActive } = req.body;
+    const { name, description, image, order, isActive, slug } = req.body;
+
+
+
+       // If name is provided but slug isn't, derive slug server-side for updates
+   let nextSlug = slug;
+   if (!nextSlug && typeof name === 'string' && name.trim()) {
+     nextSlug = name
+       .toLowerCase()
+       .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
 
     const category = await Category.findByIdAndUpdate(
       req.params.id,
@@ -85,6 +96,7 @@ router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
         image,
         order,
         isActive,
+        ...(nextSlug ? { slug: nextSlug } : {}),
       },
       { new: true, runValidators: true }
     );

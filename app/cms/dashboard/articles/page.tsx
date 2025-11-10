@@ -66,35 +66,36 @@ export default function ArticlesManagement() {
 
   const loadData = async () => {
     try {
+      // use same-origin cookies; don't hand craft Authorization header here
       const [articlesRes, categoriesRes] = await Promise.all([
-        fetch('/api/articles/admin', {
-          headers: {
-            'Authorization': `Bearer ${AuthService.getToken()}`,
-          },
-        }),
-        fetch('/api/article-categories/admin', {
-          headers: {
-            'Authorization': `Bearer ${AuthService.getToken()}`,
-          },
-        })
+        fetch('/api/articles/admin', { credentials: 'include' }),
+        fetch('/api/article-categories/admin', { credentials: 'include' }),
       ]);
-
-      const articlesData = await articlesRes.json();
-      const categoriesData = await categoriesRes.json();
-
-      if (articlesData.success) {
-        setArticles(articlesData.data || []);
+  
+      // treat HTTP 2xx as success; fall back to .success if present
+      const [articlesData, categoriesData] = await Promise.all([
+        articlesRes.json().catch(() => ({})),
+        categoriesRes.json().catch(() => ({})),
+      ]);
+  
+      if (articlesRes.ok) {
+        setArticles(articlesData?.data ?? []);
+      } else {
+        setArticles([]);
+        console.error('Articles admin fetch failed:', articlesData);
       }
-
-      if (categoriesData && categoriesData.success) {
-        setCategories(categoriesData.data || []);
+  
+      if (categoriesRes.ok) {
+        setCategories(categoriesData?.data ?? []);
       } else {
         setCategories([]);
+        console.error('Article-categories admin fetch failed:', categoriesData);
       }
     } catch (error) {
       console.error('Failed to load data:', error);
     }
   };
+  
 
   const handleDeleteArticle = async (articleId: string) => {
     if (!confirm('Are you sure you want to delete this article?')) return;
@@ -110,20 +111,26 @@ export default function ArticlesManagement() {
 
   const handleDeleteCategory = async (categoryId: string) => {
     if (!confirm('Are you sure you want to delete this category?')) return;
-
+  
     try {
-      await fetch(`/api/article-categories/${categoryId}`, {
+      const res = await fetch(`/api/article-categories/${categoryId}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${AuthService.getToken()}`,
-        },
+        credentials: 'include',
       });
-      await loadData(); // Reload data
+  
+      const data = await res.json().catch(() => null);
+  
+      if (res.ok && (data?.success ?? true)) {
+        await loadData();
+      } else {
+        alert(data?.message || 'Failed to delete category');
+      }
     } catch (error) {
       console.error('Failed to delete category:', error);
       alert('Failed to delete category');
     }
   };
+  
 
   if (isLoading) {
     return (

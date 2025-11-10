@@ -27,6 +27,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { toast } from "@/hooks/use-toast";
 import {
   Loader2,
   Plus,
@@ -34,13 +36,22 @@ import {
   Trash2,
   Star,
   Clock,
-  DollarSign
+  DollarSign,
+  Save,
+  X,
+  FolderPlus
 } from "lucide-react";
 
 interface Category {
   _id: string;
   name: string;
   slug: string;
+  description?: string;
+  image?: string;
+  order: number;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface Service {
@@ -60,6 +71,18 @@ interface Service {
   updatedAt: string;
 }
 
+interface ServiceCategory {
+  _id: string;
+  name: string;
+  slug: string;
+  description: string;
+  image?: string;
+  order: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export default function ServicesManagement() {
   const [services, setServices] = useState<Service[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -67,6 +90,15 @@ export default function ServicesManagement() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<ServiceCategory | null>(null);
+  const [categoryFormData, setCategoryFormData] = useState({
+    name: "",
+    description: "",
+    image: "",
+    order: 0,
+    isActive: true,
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -105,6 +137,136 @@ export default function ServicesManagement() {
       setIsLoading(false);
     }
   };
+
+  const loadCategories = async () => {
+    try {
+      const response = await fetch('/api/categories/admin', {
+        headers: {
+          "Cookie": document.cookie,
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        setCategories(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to load categories:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load categories",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleCategorySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const url = editingCategory
+        ? `/api/categories/${editingCategory._id}`
+        : "/api/categories";
+
+      const method = editingCategory ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          "Cookie": document.cookie,
+        },
+        body: JSON.stringify(categoryFormData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: "Success",
+          description: `Category ${editingCategory ? "updated" : "created"} successfully`,
+        });
+        loadCategories();
+        setIsCategoryDialogOpen(false);
+        setEditingCategory(null);
+        resetCategoryForm();
+      } else {
+        toast({
+          title: "Error",
+          description: data.message || "Something went wrong",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error saving category:", error);
+      toast({
+        title: "Error",
+        description: "Failed to save category",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleCategoryEdit = (category: Category) => {
+    setEditingCategory(category as ServiceCategory);
+    setCategoryFormData({
+      name: category.name,
+      description: category.description || "",
+      image: category.image || "",
+      order: category.order,
+      isActive: category.isActive,
+    });
+    setIsCategoryDialogOpen(true);
+  };
+
+  const handleCategoryDelete = async (categoryId: string) => {
+    try {
+      const response = await fetch(`/api/categories/${categoryId}`, {
+        method: "DELETE",
+        headers: {
+          "Cookie": document.cookie,
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: "Success",
+          description: "Category deleted successfully",
+        });
+        loadCategories();
+      } else {
+        toast({
+          title: "Error",
+          description: data.message || "Failed to delete category",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting category:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete category",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const resetCategoryForm = () => {
+    setCategoryFormData({
+      name: "",
+      description: "",
+      image: "",
+      order: 0,
+      isActive: true,
+    });
+  };
+
+  // const handleCategoryCancel = () => {
+  //   setIsCategoryDialogOpen(false);
+  //   setEditingCategory(null);
+  //   resetCategoryForm();
+  // };
 
   const handleDelete = async (serviceId: string) => {
     if (!confirm('Are you sure you want to delete this service?')) return;
@@ -148,6 +310,174 @@ export default function ServicesManagement() {
               <Button variant="outline" onClick={() => router.push("/cms/dashboard")}>
                 Back to Dashboard
               </Button>
+              <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+                <DialogTrigger asChild>
+                  {/* <Button variant="outline" onClick={() => setEditingCategory(null)}>
+                    <FolderPlus className="h-4 w-4 mr-2" />
+                    Manage Categories
+                  </Button> */}
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Manage Service Categories</DialogTitle>
+                    <DialogDescription>
+                      Create, edit, and delete service categories. Changes will reflect in the service dropdown.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-lg font-semibold">Categories ({categories.length})</h3>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                          type="button"
+                          onClick={() => {
+                            setEditingCategory(null);
+                            setCategoryFormData({
+                              name: "",
+                              description: "",
+                              image: "",
+                              order: 0,
+                              isActive: true,
+                            });
+                          }}>
+                            <Plus className="h-4 w-4 mr-2" />
+                            Add Category
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[500px]">
+                          <DialogHeader>
+                            <DialogTitle>
+                              {editingCategory ? "Edit Category" : "Create New Category"}
+                            </DialogTitle>
+                          </DialogHeader>
+                          <CategoryForm
+                            category={editingCategory}
+                            onSave={() => {
+                              loadCategories();
+                            }}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+
+                    <div className="grid gap-3 max-h-96 overflow-y-auto">
+                      {categories.map((category) => (
+                        <Card key={category._id}>
+                          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <div>
+                              <CardTitle className="text-base">{category.name}</CardTitle>
+                              <p className="text-sm text-muted-foreground">{category.slug}</p>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Badge variant={category.isActive ? "default" : "secondary"}>
+                                {category.isActive ? "Active" : "Inactive"}
+                              </Badge>
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button
+                                  type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleCategoryEdit(category)}
+                                  >
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[500px]">
+                                  <DialogHeader>
+                                    <DialogTitle>Edit Category</DialogTitle>
+                                  </DialogHeader>
+                                  <CategoryForm
+                                    category={editingCategory}
+                                    onSave={() => {
+                                      loadCategories();
+                                      setIsCategoryDialogOpen(false);
+                                      setEditingCategory(null);
+                                    }}
+                                  />
+                                </DialogContent>
+                              </Dialog>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="outline" size="sm">
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete Category</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Are you sure you want to delete "{category.name}"? This action cannot be undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => handleCategoryDelete(category._id)}
+                                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </CardHeader>
+                          {category.description && (
+                            <CardContent>
+                              <p className="text-sm text-muted-foreground">{category.description}</p>
+                            </CardContent>
+                          )}
+                        </Card>
+                      ))}
+                    </div>
+
+                    {categories.length === 0 && (
+                      <Card>
+                        <CardContent className="flex flex-col items-center justify-center py-8">
+                          <div className="text-center">
+                            <h4 className="text-base font-semibold mb-2">No categories found</h4>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Create your first service category to get started.
+                            </p>
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button 
+                                type = "button"
+                                onClick={() => {
+                                  setEditingCategory(null);
+                                  setCategoryFormData({
+                                    name: "",
+                                    description: "",
+                                    image: "",
+                                    order: 0,
+                                    isActive: true,
+                                  });
+                                }}>
+                                  <Plus className="h-4 w-4 mr-2" />
+                                  Create Category
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="sm:max-w-[500px]">
+                                <DialogHeader>
+                                  <DialogTitle>Create New Category</DialogTitle>
+                                </DialogHeader>
+                                <CategoryForm
+                                  category={null}
+                                  onSave={() => {
+                                    loadCategories();
+                                  }}
+                                />
+                              </DialogContent>
+                            </Dialog>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button onClick={() => setEditingService(null)}>
@@ -260,8 +590,245 @@ export default function ServicesManagement() {
   );
 }
 
+function CategoryForm({
+  category,
+  onSave
+}: {
+  category: ServiceCategory | null;
+  onSave: () => void;
+}) {
+  const [formData, setFormData] = useState({
+    name: category?.name || "",
+    description: category?.description || "",
+    image: category?.image || "",
+    order: category?.order || 0,
+    isActive: category?.isActive ?? true,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+// inside CategoryForm
+
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  // ⬇⬇ Stop bubbling to ServiceForm onSubmit (even across portal)
+  // @ts-ignore – SyntheticEvent has stopPropagation
+  if (typeof (e as any).stopPropagation === "function") (e as any).stopPropagation();
+
+  setIsSubmitting(true);
+  try {
+    const url = category ? `/api/categories/${category._id}` : "/api/categories";
+    const method = category ? "PUT" : "POST";
+
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const payload = await res.json().catch(() => ({} as any));
+    if (res.ok) {
+      toast({
+        title: "Success",
+        description: `Category ${category ? "updated" : "created"} successfully`,
+      });
+      onSave();
+    } else {
+      throw new Error(payload?.message || "Failed to save category");
+    }
+  } catch (error) {
+    console.error("Error saving category:", error);
+    toast({ title: "Error", description: "Failed to save category", variant: "destructive" });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="cat-name">Name</Label>
+          <Input
+            id="cat-name"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="Category name"
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="cat-order">Order</Label>
+          <Input
+            id="cat-order"
+            type="number"
+            value={formData.order}
+            onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+            placeholder="Display order"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="cat-description">Description</Label>
+        <Textarea
+          id="cat-description"
+          value={formData.description}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          placeholder="Category description"
+          rows={3}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="cat-image">Image URL</Label>
+        <Input
+          id="cat-image"
+          value={formData.image}
+          onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+          placeholder="Image URL (optional)"
+        />
+      </div>
+
+      <div className="flex items-center space-x-2">
+        <Switch
+          id="cat-isActive"
+          checked={formData.isActive}
+          onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+        />
+        <Label htmlFor="cat-isActive">Active</Label>
+      </div>
+
+      <div className="flex justify-end space-x-2 pt-4">
+      <Button type="button" variant="outline" onClick={onSave}>
+  <X className="h-4 w-4 mr-2" />
+  Cancel
+</Button>
+
+        <Button type="submit" disabled={isSubmitting}
+         onClick={(ev) => ev.stopPropagation()}
+         >
+          {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+          {category ? "Update" : "Create"}
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+function CategoryManagement({
+  categories,
+  onEdit,
+  onDelete,
+  onCreate
+}: {
+  categories: Category[];
+  onEdit: (category: Category) => void;
+  onDelete: (categoryId: string) => void;
+  onCreate: () => void;
+}) {
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold">Categories ({categories.length})</h3>
+        <Button onClick={onCreate}>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Category
+        </Button>
+      </div>
+
+      <div className="grid gap-3 max-h-96 overflow-y-auto">
+        {categories.map((category) => (
+          <Card key={category._id}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <div>
+                <CardTitle className="text-base">{category.name}</CardTitle>
+                <p className="text-sm text-muted-foreground">{category.slug}</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Badge variant={category.isActive ? "default" : "secondary"}>
+                  {category.isActive ? "Active" : "Inactive"}
+                </Badge>
+                <Button
+                type="button" 
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onEdit(category)}
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Category</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete "{category.name}"? This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                      <AlertDialogAction
+  type="button"
+  onClick={(e: React.MouseEvent) => { e.stopPropagation(); onDelete(category._id); }}
+  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+>
+  Delete
+</AlertDialogAction>
+
+
+
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            </CardHeader>
+            {category.description && (
+              <CardContent>
+                <p className="text-sm text-muted-foreground">{category.description}</p>
+              </CardContent>
+            )}
+          </Card>
+        ))}
+      </div>
+
+      {categories.length === 0 && (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-8">
+            <div className="text-center">
+              <h4 className="text-base font-semibold mb-2">No categories found</h4>
+              <p className="text-sm text-muted-foreground mb-4">
+                Create your first service category to get started.
+              </p>
+              <Button onClick={onCreate}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create Category
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
+
 function ServiceForm({ service, onSave }: { service: Service | null; onSave: () => void }) {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [editingCategory, setEditingCategory] = useState<ServiceCategory | null>(null);
+  const [categoryFormData, setCategoryFormData] = useState({
+    name: "",
+    description: "",
+    image: "",
+    order: 0,
+    isActive: true,
+  });
   const [formData, setFormData] = useState({
     title: service?.title || '',
     slug: service?.slug || '',
@@ -283,17 +850,108 @@ function ServiceForm({ service, onSave }: { service: Service | null; onSave: () 
         const response = await fetch('/api/categories');
         const data = await response.json();
 
-        if (response.ok && data) {
-          setCategories(data);
+        if (response.ok && data.success && Array.isArray(data.data)) {
+          setCategories(data.data);
         } else {
           console.error('Failed to load categories:', data?.message || 'Unknown error');
+          setCategories([]); // Set empty array as fallback
         }
       } catch (error) {
         console.error('Failed to load categories:', error);
+        setCategories([]); // Set empty array as fallback
       }
     };
     loadCategories();
   }, []);
+
+  // ⬇⬇ CHANGED: align with the working public endpoint so the dialog reflects immediately
+  const loadCategories = async () => {
+    try {
+      const response = await fetch('/api/categories');
+      const data = await response.json();
+      if (response.ok && data.success && Array.isArray(data.data)) {
+        setCategories(data.data);
+      } else {
+        console.error('Failed to load categories:', data?.message || 'Unknown error');
+        toast({
+          title: "Error",
+          description: "Failed to load categories",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Failed to load categories:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load categories",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleCategoryEdit = (category: Category) => {
+    setEditingCategory(category as ServiceCategory);
+    setCategoryFormData({
+      name: category.name,
+      description: category.description || "",
+      image: category.image || "",
+      order: category.order,
+      isActive: category.isActive,
+    });
+  };
+
+  const handleCategoryDelete = async (categoryId: string) => {
+    try {
+      const response = await fetch(`/api/categories/${categoryId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Cookie": document.cookie,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          // ⬇⬇ OPTIMISTIC UPDATE so UI reflects instantly
+          setCategories(prev => prev.filter(c => c._id !== categoryId));
+          // If the deleted one was selected, clear selection
+          setFormData(prev => ({
+            ...prev,
+            category: prev.category === categoryId ? "" : prev.category
+          }));
+          toast({
+            title: "Success",
+            description: "Category deleted successfully",
+          });
+          // Also re-fetch to stay in sync (no page reload)
+          loadCategories();
+        } else {
+          toast({
+            title: "Error",
+            description: data.message || "Failed to delete category",
+            variant: "destructive",
+          });
+        }
+      } else {
+        // Handle non-200 responses
+        const errorText = await response.text();
+        console.error("Delete failed:", response.status, errorText);
+        toast({
+          title: "Error",
+          description: `Failed to delete category (${response.status})`,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting category:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete category",
+        variant: "destructive",
+      });
+    }
+  };
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -390,7 +1048,180 @@ function ServiceForm({ service, onSave }: { service: Service | null; onSave: () 
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="category">Category</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="category">Category</Label>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+              >
+                <FolderPlus className="h-4 w-4 mr-2" />
+                Manage Categories
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Manage Service Categories</DialogTitle>
+                <DialogDescription>
+                  Create, edit, and delete service categories. Changes will reflect in the service dropdown.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-semibold">Categories ({categories.length})</h3>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        type="button"   onClick={() => {
+                        setEditingCategory(null);
+                        setCategoryFormData({
+                          name: "",
+                          description: "",
+                          image: "",
+                          order: 0,
+                          isActive: true,
+                        });
+                      }}>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Category
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle>Create New Category</DialogTitle>
+                      </DialogHeader>
+                      <CategoryForm
+                        category={null}
+                        onSave={() => {
+                          loadCategories();
+                        }}
+                      />
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                <div className="grid gap-3 max-h-96 overflow-y-auto">
+                  {categories.map((category) => (
+                    <Card key={category._id}>
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <div>
+                          <CardTitle className="text-base">{category.name}</CardTitle>
+                          <p className="text-sm text-muted-foreground">{category.slug}</p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge variant={category.isActive ? "default" : "secondary"}>
+                            {category.isActive ? "Active" : "Inactive"}
+                          </Badge>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button
+                                type="button"  
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleCategoryEdit(category)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[500px]">
+                              <DialogHeader>
+                                <DialogTitle>Edit Category</DialogTitle>
+                              </DialogHeader>
+                              <CategoryForm
+                                category={editingCategory}
+                                onSave={() => {
+                                  loadCategories();
+                                  setEditingCategory(null);
+                                }}
+                              />
+                            </DialogContent>
+                          </Dialog>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="outline" size="sm">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete Category</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete "{category.name}"? This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+  type="button"
+  onClick={(e: React.MouseEvent) => { e.stopPropagation(); handleCategoryDelete(category._id); }}
+  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+>
+  Delete
+</AlertDialogAction>
+
+
+
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </CardHeader>
+                      {category.description && (
+                        <CardContent>
+                          <p className="text-sm text-muted-foreground">{category.description}</p>
+                        </CardContent>
+                      )}
+                    </Card>
+                  ))}
+                </div>
+
+                {categories.length === 0 && (
+                  <Card>
+                    <CardContent className="flex flex-col items-center justify-center py-8">
+                      <div className="text-center">
+                        <h4 className="text-base font-semibold mb-2">No categories found</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Create your first service category to get started.
+                        </p>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button onClick={() => {
+                              setEditingCategory(null);
+                              setCategoryFormData({
+                                name: "",
+                                description: "",
+                                image: "",
+                                order: 0,
+                                isActive: true,
+                              });
+                            }}>
+                              <Plus className="h-4 w-4 mr-2" />
+                              Create Category
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[500px]">
+                            <DialogHeader>
+                              <DialogTitle>Create New Category</DialogTitle>
+                            </DialogHeader>
+                            <CategoryForm
+                              category={null}
+                              onSave={() => {
+                                loadCategories();
+                                setEditingCategory(null);
+                              }}
+                            />
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
         <select
           id="category"
           value={formData.category}
