@@ -16,6 +16,7 @@ const playfair = Playfair_Display({
 });
 
 // Default metadata for the entire site
+// Default metadata for the entire site - will be overridden by page-specific metadata
 export const metadata: Metadata = {
   title: "Velora Thai Spa - Premium Wellness & Massage Services",
   description: "Experience ultimate relaxation at Velora Thai Spa. Book professional massage, wellness treatments, and spa services in a serene environment.",

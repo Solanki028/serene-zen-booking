@@ -54,9 +54,9 @@ export default function ArticleDetailPage() {
       // Open Graph tags
       updateMetaTag('og:title', `${article.title} - Velora Thai Spa`, true);
       updateMetaTag('og:description', article.excerpt || `Read ${article.title} by ${article.author} at Velora Thai Spa.`, true);
-      updateMetaTag('og:url', `/articles/${article.category.slug}/${article.slug}`, true);
+      updateMetaTag('og:url', `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/articles/${article.category.slug}/${article.slug}`, true);
       updateMetaTag('og:site_name', "Velora Thai Spa", true);
-      updateMetaTag('og:image', article.featuredImage || "/assets/hero-spa.jpg", true);
+      updateMetaTag('og:image', article.featuredImage ? `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}${article.featuredImage}` : `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/assets/hero-spa.jpg`, true);
       updateMetaTag('og:image:width', "1200", true);
       updateMetaTag('og:image:height', "630", true);
       updateMetaTag('og:image:alt', `Article: ${article.title} - Velora Thai Spa`, true);
@@ -68,7 +68,7 @@ export default function ArticleDetailPage() {
       updateMetaTag('twitter:card', "summary_large_image");
       updateMetaTag('twitter:title', `${article.title} - Velora Thai Spa`);
       updateMetaTag('twitter:description', article.excerpt || `Read ${article.title} by ${article.author} at Velora Thai Spa.`);
-      updateMetaTag('twitter:image', article.featuredImage || "/assets/hero-spa.jpg");
+      updateMetaTag('twitter:image', article.featuredImage ? `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}${article.featuredImage}` : `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/assets/hero-spa.jpg`);
 
       // Cleanup function to reset to default when component unmounts
       return () => {

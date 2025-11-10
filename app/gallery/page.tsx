@@ -111,9 +111,9 @@ function GalleryPageContent() {
       // Open Graph tags
       updateMetaTag('og:title', heroTitle, true);
       updateMetaTag('og:description', heroSubtitle, true);
-      updateMetaTag('og:url', '/gallery', true);
+      updateMetaTag('og:url', `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/gallery`, true);
       updateMetaTag('og:site_name', "Velora Thai Spa", true);
-      updateMetaTag('og:image', heroUrl || "/assets/hero-spa.jpg", true);
+      updateMetaTag('og:image', heroUrl ? `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}${heroUrl}` : `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/assets/hero-spa.jpg`, true);
       updateMetaTag('og:image:width', "1200", true);
       updateMetaTag('og:image:height', "630", true);
       updateMetaTag('og:image:alt', `Velora Thai Spa Gallery - ${heroTitle}`, true);
@@ -122,7 +122,7 @@ function GalleryPageContent() {
       updateMetaTag('twitter:card', "summary_large_image");
       updateMetaTag('twitter:title', heroTitle);
       updateMetaTag('twitter:description', heroSubtitle);
-      updateMetaTag('twitter:image', heroUrl || "/assets/hero-spa.jpg");
+      updateMetaTag('twitter:image', heroUrl ? `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}${heroUrl}` : `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/assets/hero-spa.jpg`);
 
       // Cleanup function to reset to default when component unmounts
       return () => {

@@ -43,9 +43,9 @@ const MembershipPage = () => {
     // Open Graph tags
     updateMetaTag('og:title', "Membership - Velora Thai Spa | Exclusive Wellness Membership Plans", true);
     updateMetaTag('og:description', "Join Velora Thai Spa's exclusive membership program for unlimited access to premium wellness treatments.", true);
-    updateMetaTag('og:url', "/membership", true);
+    updateMetaTag('og:url', `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/membership`, true);
     updateMetaTag('og:site_name', "Velora Thai Spa", true);
-    updateMetaTag('og:image', "/assets/hero-spa.jpg", true);
+    updateMetaTag('og:image', `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/assets/membership-hero.jpg`, true);
     updateMetaTag('og:image:width', "1200", true);
     updateMetaTag('og:image:height', "630", true);
     updateMetaTag('og:image:alt', "Velora Thai Spa Exclusive Membership Plans", true);
@@ -54,7 +54,7 @@ const MembershipPage = () => {
     updateMetaTag('twitter:card', "summary_large_image");
     updateMetaTag('twitter:title', "Membership - Velora Thai Spa | Exclusive Wellness Membership Plans");
     updateMetaTag('twitter:description', "Join Velora Thai Spa's exclusive membership program for unlimited access to premium wellness treatments.");
-    updateMetaTag('twitter:image', "/assets/hero-spa.jpg");
+    updateMetaTag('twitter:image', `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/assets/membership-hero.jpg`);
 
     // Cleanup function to reset to default when component unmounts
     return () => {
