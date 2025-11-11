@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description =
     "Join Velora Thai Spa's exclusive membership program for unlimited access to premium wellness treatments. Flexible plans, priority booking, and special member benefits.";
   const canonical = `${publicBase}/membership`;
-  const image = `${publicBase}/assets/membership-hero.jpg`;
+  const image = `${publicBase}/assets/service-traditional.jpg`;
 
   return {
     title,
