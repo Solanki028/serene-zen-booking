@@ -146,12 +146,12 @@ export default function SettingsManagement() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="whatsapp">WhatsApp Number</Label>
+              <Label htmlFor="telegram_username">Telegram Username</Label>
               <Input
-                id="whatsapp"
-                value={settings.whatsapp || ''}
-                onChange={(e) => updateSetting('whatsapp', e.target.value)}
-                placeholder="+1234567890"
+                id="telegram_username"
+                value={settings.telegram_username || ''}
+                onChange={(e) => updateSetting('telegram_username', e.target.value)}
+                placeholder="@yourusername or https://t.me/yourusername"
               />
             </div>
           </CardContent>
@@ -193,7 +193,7 @@ export default function SettingsManagement() {
         </Card>
 
         {/* Booking & External Links */}
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle>External Links & Booking</CardTitle>
             <CardDescription>
@@ -211,7 +211,7 @@ export default function SettingsManagement() {
               />
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
 
         {/* Service Page Hero Image */}
         <Card>
@@ -344,36 +344,6 @@ export default function SettingsManagement() {
 
 
 
-        {/* SEO & Meta Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle>SEO & Meta Information</CardTitle>
-            <CardDescription>
-              Default meta information for the website
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="meta_title">Default Meta Title</Label>
-              <Input
-                id="meta_title"
-                value={settings.meta_title || ''}
-                onChange={(e) => updateSetting('meta_title', e.target.value)}
-                placeholder="SpaFort - Authentic Thai Massage & Wellness"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="meta_description">Default Meta Description</Label>
-              <Textarea
-                id="meta_description"
-                value={settings.meta_description || ''}
-                onChange={(e) => updateSetting('meta_description', e.target.value)}
-                placeholder="Experience authentic Thai massage and holistic wellness at SpaFort. Expert therapists, serene environment, customized treatments."
-                rows={3}
-              />
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Social Media Links */}
         <Card>
