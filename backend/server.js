@@ -4,8 +4,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
-import { v2 as cloudinary } from 'cloudinary';
 
+import { v2 as cloudinary } from 'cloudinary';
 // Import routes
 import authRoutes from './routes/auth.js';
 import serviceRoutes from './routes/services.js';
