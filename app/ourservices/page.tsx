@@ -9,9 +9,9 @@ export const fetchCache = "default-no-store";
 export async function generateMetadata(): Promise<Metadata> {
   const publicBase = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-  const title = "Our Services - Velora Thai Spa | Professional Massage & Wellness Treatments";
+  const title = "Our Services - SpaFort | Professional Massage & Wellness Treatments";
   const description =
-    "Explore our comprehensive range of professional massage and wellness services at Velora Thai Spa. Traditional Thai massage, aromatherapy, deep tissue massage, foot reflexology, and signature spa treatments.";
+    "Explore our comprehensive range of professional massage and wellness services at SpaFort. Traditional Thai massage, aromatherapy, deep tissue massage, foot reflexology, and signature spa treatments.";
   const canonical = `${publicBase}/ourservices`;
   const image = `${publicBase}/assets/service-traditional.jpg`;
 
@@ -23,9 +23,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url: canonical,
-      siteName: "Velora Thai Spa",
+      siteName: "SpaFort",
       type: "website",
-      images: [{ url: image, width: 1200, height: 630, alt: "Professional Massage & Wellness Services at Velora Thai Spa" }],
+      images: [{ url: image, width: 1200, height: 630, alt: "Professional Massage & Wellness Services at SpaFort" }],
     },
     twitter: {
       card: "summary_large_image",

@@ -46,9 +46,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url: canonical,
-      siteName: "Velora Thai Spa",
+      siteName: "SpaFort",
       type: "website",
-      images: [{ url: heroUrl, width: 1200, height: 630, alt: `Velora Thai Spa Gallery - ${title}` }],
+      images: [{ url: heroUrl, width: 1200, height: 630, alt: `SpaFort Gallery - ${title}` }],
     },
     twitter: {
       card: "summary_large_image",

@@ -15,10 +15,10 @@ export const Footer = () => {
           {/* Brand & Contact */}
           <div>
             <h3 className="playfair-heading text-2xl font-bold tracking-[-0.2px] mb-3">
-              Velora Thai Spa
+              SpaFort
             </h3>
             <p className="playfair-heading text-sm text-white/80 mb-6">
-              Authentic Thai massage and holistic wellness since 2008.
+            Authentic doorstep massage & wellness 
             </p>
 
             <div className="space-y-3 text-sm">
@@ -32,26 +32,37 @@ export const Footer = () => {
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15">
-                  <Phone className="h-3.5 w-3.5" />
-                </span>
-                <a
-                  href="tel:+1234567890"
-                  className="text-white/85 hover:text-white transition-colors"
-                >
-                  +1 (234) 567-890
-                </a>
-              </div>
+  <a
+    href="https://t.me/yourusername"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center gap-2 text-white/85 hover:text-white transition-colors"
+  >
+    <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15 hover:bg-white/20 transition-colors">
+      <svg
+        className="h-3.5 w-3.5"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M9.999 15.2l-.39 5.5c.56 0 .8-.24 1.1-.53l2.6-2.5 5.4 3.9c.99.54 1.7.25 1.96-.92l3.55-16.7h-.01c.32-1.49-.53-2.08-1.5-1.72L1.53 9.68c-1.45.58-1.43 1.42-.26 1.8l5.48 1.7L18.47 5.6c.58-.38 1.1-.17.67.21L9.999 15.2z" />
+      </svg>
+    </span>
+    <span>Telegram</span>
+  </a>
+</div>
+
+
 
               <div className="flex items-center gap-3">
                 <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15">
                   <Mail className="h-3.5 w-3.5" />
                 </span>
                 <a
-                  href="mailto:info@Velorathai.com"
+                  href="mailto:info@spafort.com "
                   className="text-white/85 hover:text-white transition-colors"
                 >
-                  info@Velorathai.com
+                 info@spafort.com 
                 </a>
               </div>
             </div>
@@ -164,7 +175,7 @@ export const Footer = () => {
         </div>
 
         <div className="border-t border-white/15 mt-12 pt-8 text-center text-sm text-white/70">
-          © {new Date().getFullYear()} Velora Thai Spa. All rights reserved.
+          © {new Date().getFullYear()} SpaFort. All rights reserved.
         </div>
       </div>
     </footer>

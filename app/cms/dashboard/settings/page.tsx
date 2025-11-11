@@ -359,7 +359,7 @@ export default function SettingsManagement() {
                 id="meta_title"
                 value={settings.meta_title || ''}
                 onChange={(e) => updateSetting('meta_title', e.target.value)}
-                placeholder="Velora Thai Spa - Authentic Thai Massage & Wellness"
+                placeholder="SpaFort - Authentic Thai Massage & Wellness"
               />
             </div>
             <div className="space-y-2">
@@ -368,7 +368,7 @@ export default function SettingsManagement() {
                 id="meta_description"
                 value={settings.meta_description || ''}
                 onChange={(e) => updateSetting('meta_description', e.target.value)}
-                placeholder="Experience authentic Thai massage and holistic wellness at Velora Thai Spa. Expert therapists, serene environment, customized treatments."
+                placeholder="Experience authentic Thai massage and holistic wellness at SpaFort. Expert therapists, serene environment, customized treatments."
                 rows={3}
               />
             </div>

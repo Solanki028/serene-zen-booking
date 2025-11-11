@@ -9,9 +9,9 @@ export const fetchCache = "default-no-store";
 export async function generateMetadata(): Promise<Metadata> {
   const publicBase = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-  const title = "Terms & Services - Velora Thai Spa | Service Terms & Conditions";
+  const title = "Terms & Services - SpaFort | Service Terms & Conditions";
   const description =
-    "Read Velora Thai Spa's terms and services. Learn about booking policies, cancellation terms, health and safety guidelines, and membership conditions.";
+    "Read SpaFort's terms and services. Learn about booking policies, cancellation terms, health and safety guidelines, and membership conditions.";
   const canonical = `${publicBase}/termsandservice`;
 
   return {
@@ -22,14 +22,14 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url: canonical,
-      siteName: "Velora Thai Spa",
+      siteName: "SpaFort",
       type: "website",
       images: [
         {
           url: `${publicBase}/assets/hero-spa.jpg`,
           width: 1200,
           height: 630,
-          alt: "Velora Thai Spa - Terms & Services",
+          alt: "SpaFort - Terms & Services",
         },
       ],
     },

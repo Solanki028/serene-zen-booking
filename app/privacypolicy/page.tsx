@@ -9,9 +9,9 @@ export const fetchCache = "default-no-store";
 export async function generateMetadata(): Promise<Metadata> {
   const publicBase = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-  const title = "Privacy Policy - Velora Thai Spa | Data Protection & Privacy";
+  const title = "Privacy Policy - SpaFort | Data Protection & Privacy";
   const description =
-    "Learn about Velora Thai Spa's privacy policy and how we protect your personal information. We are committed to safeguarding your data and maintaining your trust.";
+    "Learn about SpaFort's privacy policy and how we protect your personal information. We are committed to safeguarding your data and maintaining your trust.";
   const canonical = `${publicBase}/privacypolicy`;
   const image = `${publicBase}/assets/hero-spa.jpg`;
 
@@ -23,9 +23,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url: canonical,
-      siteName: "Velora Thai Spa",
+      siteName: "SpaFort",
       type: "website",
-      images: [{ url: image, width: 1200, height: 630, alt: "Velora Thai Spa - Privacy Policy" }],
+      images: [{ url: image, width: 1200, height: 630, alt: "SpaFort - Privacy Policy" }],
     },
     twitter: {
       card: "summary_large_image",

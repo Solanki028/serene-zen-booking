@@ -49,19 +49,19 @@ export async function generateMetadata(
 
   if (!article) {
     return {
-      title: "Article Not Found - Velora Thai Spa",
+      title: "Article Not Found - SpaFort",
       description: "The requested article could not be found.",
       alternates: { canonical },
       openGraph: {
-        title: "Article Not Found - Velora Thai Spa",
+        title: "Article Not Found - SpaFort",
         description: "The requested article could not be found.",
         url: canonical,
         type: "article",
-        images: [{ url: `${publicBase}/assets/hero-spa.jpg`, width: 1200, height: 630, alt: "Velora Thai Spa" }],
+        images: [{ url: `${publicBase}/assets/hero-spa.jpg`, width: 1200, height: 630, alt: "SpaFort" }],
       },
       twitter: {
         card: "summary_large_image",
-        title: "Article Not Found - Velora Thai Spa",
+        title: "Article Not Found - SpaFort",
         description: "The requested article could not be found.",
         images: [`${publicBase}/assets/hero-spa.jpg`],
       },
@@ -73,29 +73,29 @@ export async function generateMetadata(
     : `${publicBase}${article.featuredImage || "/assets/hero-spa.jpg"}`;
 
   return {
-    title: `${article.title} - Velora Thai Spa`,
-    description: article.excerpt || `Read ${article.title} by ${article.author} at Velora Thai Spa.`,
+    title: `${article.title} - SpaFort`,
+    description: article.excerpt || `Read ${article.title} by ${article.author} at SpaFort.`,
     keywords: ["wellness", "spa", article.category.name, ...(article.tags ?? []), article.author],
     alternates: { canonical },
     openGraph: {
-      title: `${article.title} - Velora Thai Spa`,
-      description: article.excerpt || `Read ${article.title} by ${article.author} at Velora Thai Spa.`,
+      title: `${article.title} - SpaFort`,
+      description: article.excerpt || `Read ${article.title} by ${article.author} at SpaFort.`,
       url: canonical,
-      siteName: "Velora Thai Spa",
+      siteName: "SpaFort",
       type: "article",
       locale: "en_US",
       authors: [article.author],
       publishedTime: article.publishedAt,
-      images: [{ url: img, width: 1200, height: 630, alt: `Article: ${article.title} - Velora Thai Spa` }],
+      images: [{ url: img, width: 1200, height: 630, alt: `Article: ${article.title} - SpaFort` }],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${article.title} - Velora Thai Spa`,
-      description: article.excerpt || `Read ${article.title} by ${article.author} at Velora Thai Spa.`,
+      title: `${article.title} - SpaFort`,
+      description: article.excerpt || `Read ${article.title} by ${article.author} at SpaFort.`,
       images: [img],
     },
   };
-}
+} 
 
 
 export default async function Page({ params }: { params: Promise<Params> }) {

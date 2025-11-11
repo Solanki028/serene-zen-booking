@@ -32,8 +32,8 @@ export async function generateMetadata(
     data?.category?.name ??
     categorySlug.replace(/-/g, " ").replace(/^\w/, (c) => c.toUpperCase());
 
-  const title = `${categoryName} Articles - Velora Thai Spa`;
-  const description = `Explore curated articles on ${categoryName} from Velora Thai Spa—wellness insights, spa tips, and healthy living.`;
+  const title = `${categoryName} Articles - SpaFort`;
+  const description = `Explore curated articles on ${categoryName} from SpaFort—wellness insights, spa tips, and healthy living.`;
   const canonical = `${publicBase}/articles/${categorySlug}`;
   const image = `${publicBase}/assets/hero-spa.jpg`;
 
@@ -45,9 +45,9 @@ export async function generateMetadata(
       title,
       description,
       url: canonical,
-      siteName: "Velora Thai Spa",
+      siteName: "SpaFort",
       type: "website",
-      images: [{ url: image, width: 1200, height: 630, alt: `${categoryName} Articles - Velora Thai Spa` }],
+      images: [{ url: image, width: 1200, height: 630, alt: `${categoryName} Articles - SpaFort` }],
     },
     twitter: {
       card: "summary_large_image",

@@ -14,31 +14,43 @@ interface Testimonial {
   avatarUrl?: string;
 }
 
+interface DisplayTestimonial {
+  name: string;
+  quote: string;
+  rating: number;
+  avatarUrl?: string;
+}
+
 const defaultTestimonials = [
   {
-    name: "Sarah Johnson",
-    quote: "The most authentic Thai massage I've experienced outside of Thailand. The therapists are incredibly skilled.",
+    name: "Priya Sharma",
+    quote:
+      "One of the best massage experiences I’ve had. The staff really know what they’re doing and the atmosphere is super relaxing.",
     rating: 5,
   },
   {
-    name: "Michael Chen",
-    quote: "I've been a member for 3 years. The quality of service and value is unmatched. Highly recommend!",
+    name: "Rahul Kumar",
+    quote:
+      "Been visiting here for over a year now. Great service, friendly team, and the massages always leave me refreshed.",
     rating: 5,
   },
   {
-    name: "Emily Rodriguez",
-    quote: "The deep tissue massage worked wonders on my chronic back pain. Clean, professional, and caring staff.",
+    name: "Anjali Singh",
+    quote:
+      "Got a deep tissue massage after a hectic work week — my back pain eased up instantly. Totally worth it!",
     rating: 5,
   },
   {
-    name: "David Thompson",
-    quote: "Absolutely love the foot reflexology treatment. It's become my weekly ritual for stress relief.",
+    name: "Vikram Gupta",
+    quote:
+      "Their foot reflexology session is amazing. I usually go every weekend, and it’s become my way to de-stress.",
     rating: 5,
   },
 ];
 
+
 export const Testimonials = () => {
-  const [testimonials, setTestimonials] = useState(defaultTestimonials);
+  const [testimonials, setTestimonials] = useState<DisplayTestimonial[]>(defaultTestimonials);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -50,6 +62,7 @@ export const Testimonials = () => {
             name: testimonial.name,
             quote: testimonial.quote,
             rating: testimonial.rating,
+            avatarUrl: testimonial.avatarUrl,
           }));
           setTestimonials(displayTestimonials);
         }
@@ -120,15 +133,34 @@ export const Testimonials = () => {
             >
               <Card className="h-full">
                 <CardContent className="p-6">
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-accent text-accent" />
+                  {testimonial.avatarUrl && (
+                    <div className="flex justify-center mb-4">
+                      <img
+                        src={testimonial.avatarUrl}
+                        alt={testimonial.name}
+                        className="w-16 h-16 rounded-full object-cover border-2 border-accent/20"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  )}
+                  <div className="flex gap-1 mb-4 justify-center">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`h-5 w-5 ${
+                          i < testimonial.rating
+                            ? 'fill-yellow-400 text-yellow-400'
+                            : 'text-gray-300'
+                        }`}
+                      />
                     ))}
                   </div>
-                  <p className="text-muted-foreground mb-4 leading-relaxed">
+                  <p className="text-muted-foreground mb-4 leading-relaxed text-center">
                     "{testimonial.quote}"
                   </p>
-                  <p className="font-semibold">{testimonial.name}</p>
+                  <p className="font-semibold text-center">{testimonial.name}</p>
                 </CardContent>
               </Card>
             </motion.div>

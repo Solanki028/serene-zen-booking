@@ -15,7 +15,7 @@ export default function AboutUsClient() {
           className="text-center mb-16 relative z-10"
         >
           <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 bg-gradient-to-r from-amber-700 via-rose-600 to-purple-700 bg-clip-text text-transparent">
-            About Velora Thai Spa
+            About SpaFort
           </h1>
           <p className="text-xl md:text-2xl text-gray-700 max-w-2xl mx-auto leading-relaxed">
             A sanctuary of calm, crafted for those who take their wellness seriously.

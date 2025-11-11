@@ -34,15 +34,23 @@ export const CTABand = () => {
               <Calendar className="h-5 w-5" />
               Book Your Session
             </Button>
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="gap-2 bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-              onClick={() => window.location.href = 'tel:+1234567890'}
-            >
-              <Phone className="h-5 w-5" />
-              Call Us Now
-            </Button>
+            <Button
+  size="lg"
+  variant="outline"
+  className="gap-2 bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+  onClick={() => window.open('https://t.me/yourusername', '_blank')}
+>
+  <svg
+    className="h-5 w-5"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M9.999 15.2l-.39 5.5c.56 0 .8-.24 1.1-.53l2.6-2.5 5.4 3.9c.99.54 1.7.25 1.96-.92l3.55-16.7h-.01c.32-1.49-.53-2.08-1.5-1.72L1.53 9.68c-1.45.58-1.43 1.42-.26 1.8l5.48 1.7L18.47 5.6c.58-.38 1.1-.17.67.21L9.999 15.2z" />
+  </svg>
+  Message on Telegram
+</Button>
+
           </div>
         </div>
       </div>

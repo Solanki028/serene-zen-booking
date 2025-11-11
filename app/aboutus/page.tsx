@@ -9,9 +9,9 @@ export const fetchCache = "default-no-store";
 export async function generateMetadata(): Promise<Metadata> {
   const publicBase = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-  const title = "About Us - Velora Thai Spa | Premium Wellness Experience";
+  const title = "About Us - SpaFort | Premium Wellness Experience";
   const description =
-    "Discover Velora Thai Spa's story - 16+ years of wellness excellence, serving 20K+ happy clients with 30+ signature treatments. Experience traditional Thai massage and modern healing therapies.";
+    "Discover SpaFort's story - 16+ years of wellness excellence, serving 20K+ happy clients with 30+ signature treatments. Experience traditional Thai massage and modern healing therapies.";
   const canonical = `${publicBase}/aboutus`;
   const image = `${publicBase}/assets/hero-spa.jpg`;
 
@@ -23,9 +23,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url: canonical,
-      siteName: "Velora Thai Spa",
+      siteName: "SpaFort",
       type: "website",
-      images: [{ url: image, width: 1200, height: 630, alt: "About Velora Thai Spa - Premium Wellness Experience" }],
+      images: [{ url: image, width: 1200, height: 630, alt: "About SpaFort - Premium Wellness Experience" }],
     },
     twitter: {
       card: "summary_large_image",

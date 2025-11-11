@@ -82,7 +82,7 @@ export const Navbar = () => {
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2">
             <div className="playfair-heading text-2xl sm:text-[32px] font-bold text-primary tracking-[-0.2px]">
-              Velora Thai Spa
+              SpaFort
             </div>
           </Link>
 

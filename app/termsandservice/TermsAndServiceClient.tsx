@@ -20,7 +20,7 @@ export default function TermsAndServiceClient() {
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4">Acceptance of Terms</h2>
                 <p className="text-muted-foreground mb-4">
-                  By accessing and using Velora Thai Spa&apos;s services, you accept and agree to be bound by
+                  By accessing and using SpaFort&apos;s services, you accept and agree to be bound by
                   the terms and provision of this agreement. If you do not agree to abide by the above,
                   please do not use this service.
                 </p>
@@ -29,7 +29,7 @@ export default function TermsAndServiceClient() {
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4">Service Description</h2>
                 <p className="text-muted-foreground mb-4">
-                  Velora Thai Spa provides traditional Thai massage and wellness services. All services
+                  SpaFort provides traditional Thai massage and wellness services. All services
                   are performed by certified professionals in a clean and safe environment. Service
                   descriptions, pricing, and availability are subject to change without notice.
                 </p>
@@ -74,7 +74,7 @@ export default function TermsAndServiceClient() {
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4">Limitation of Liability</h2>
                 <p className="text-muted-foreground mb-4">
-                  Velora Thai Spa shall not be liable for any indirect, incidental, special, or consequential
+                  SpaFort shall not be liable for any indirect, incidental, special, or consequential
                   damages arising out of or in connection with the use of our services. Our liability
                   shall not exceed the amount paid for the service in question.
                 </p>

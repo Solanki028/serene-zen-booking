@@ -85,7 +85,7 @@ export default function CMSDashboard() {
               </div>
               <div>
                 <h1 className="text-3xl font-serif font-bold bg-gradient-to-r from-purple-700 via-pink-600 to-amber-600 bg-clip-text text-transparent">
-                  Velora Thai massage & spa
+                  SpaFort massage & spa
                 </h1>
                 <p className="text-sm text-gray-600 flex items-center gap-2 mt-1">
                   <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
@@ -108,12 +108,13 @@ export default function CMSDashboard() {
       {/* Main Content */}
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs defaultValue="overview" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-8 bg-white/80 backdrop-blur-xl p-2 rounded-2xl shadow-lg border border-purple-100">
+          <TabsList className="grid w-full grid-cols-9 bg-white/80 backdrop-blur-xl p-2 rounded-2xl shadow-lg border border-purple-100">
             <TabsTrigger value="overview" className="rounded-xl data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300">Overview</TabsTrigger>
             <TabsTrigger value="homepage" className="rounded-xl data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300">Homepage</TabsTrigger>
             <TabsTrigger value="services" className="rounded-xl data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300">Services</TabsTrigger>
             <TabsTrigger value="articles" className="rounded-xl data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300">Articles</TabsTrigger>
             <TabsTrigger value="memberships" className="rounded-xl data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300">Memberships</TabsTrigger>
+            <TabsTrigger value="testimonials" className="rounded-xl data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300">Testimonials</TabsTrigger>
             <TabsTrigger value="bookings" className="rounded-xl data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300">Bookings</TabsTrigger>
             <TabsTrigger value="gallery" className="rounded-xl data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300">Gallery</TabsTrigger>
             <TabsTrigger value="settings" className="rounded-xl data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white transition-all duration-300">Settings</TabsTrigger>
@@ -327,7 +328,7 @@ export default function CMSDashboard() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button 
+                  <Button
                     onClick={() => router.push("/cms/dashboard/testimonials")}
                     className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                   >
