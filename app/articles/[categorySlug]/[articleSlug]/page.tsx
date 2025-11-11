@@ -1,86 +1,107 @@
+// app/articles/[categorySlug]/[articleSlug]/page.tsx
 import type { Metadata, ResolvingMetadata } from "next";
+import { headers } from "next/headers";
 import ArticleClient, { Article } from "./ArticleClient";
 
-export const revalidate = 60; // optional
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "default-no-store";
 
-async function fetchArticle(categorySlug: string, articleSlug: string): Promise<Article | null> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const res = await fetch(
-    `${base}/api/articles/category/${encodeURIComponent(categorySlug)}/${encodeURIComponent(articleSlug)}`,
-    { cache: "no-store" }
-  );
+type Params = { categorySlug: string; articleSlug: string };
+
+async function getSiteUrlFromRequest() {
+  const h = await headers(); // Next 15: await headers()
+  const host = h.get("x-forwarded-host") ?? h.get("host");
+  const proto = h.get("x-forwarded-proto") ?? "https";
+  if (host) return `${proto}://${host}`;
+  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+}
+
+async function fetchArticle(base: string, categorySlug: string, articleSlug: string): Promise<Article | null> {
+  const url = `${base}/api/articles/category/${encodeURIComponent(categorySlug)}/${encodeURIComponent(articleSlug)}`;
+  const res = await fetch(url, { cache: "no-store", next: { revalidate: 0 } });
+  if (!res.ok) return null;
   const json = await res.json().catch(() => null);
   if (!json || !json.success) return null;
   return json.data as Article;
 }
 
-type Params = { categorySlug: string; articleSlug: string };
-
-// ✅ params is a Promise in Next 15+
 export async function generateMetadata(
   { params }: { params: Promise<Params> },
-  _parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const { categorySlug, articleSlug } = await params; // <-- await here
-  const article = await fetchArticle(categorySlug, articleSlug);
+  const { categorySlug, articleSlug } = await params;
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const url = `${siteUrl}/articles/${categorySlug}/${articleSlug}`;
+  // ✅ Use env only; do NOT call headers() here.
+  const publicBase =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    "https://veloraaspa.netlify.app"; // set your real domain in env
+
+  // Fetch article data for OG/Twitter (absolute URL built from env)
+  const res = await fetch(
+    `${publicBase}/api/articles/category/${encodeURIComponent(categorySlug)}/${encodeURIComponent(articleSlug)}`,
+    { cache: "no-store" }
+  );
+  const json = res.ok ? await res.json().catch(() => null) : null;
+  const article: Article | null = json?.success ? json.data : null;
+
+  const canonical = `${publicBase}/articles/${categorySlug}/${articleSlug}`;
 
   if (!article) {
     return {
       title: "Article Not Found - Velora Thai Spa",
       description: "The requested article could not be found.",
-      alternates: { canonical: url },
+      alternates: { canonical },
       openGraph: {
         title: "Article Not Found - Velora Thai Spa",
         description: "The requested article could not be found.",
-        url,
+        url: canonical,
         type: "article",
-        images: [{ url: `${siteUrl}/assets/hero-spa.jpg`, width: 1200, height: 630, alt: "Velora Thai Spa" }],
+        images: [{ url: `${publicBase}/assets/hero-spa.jpg`, width: 1200, height: 630, alt: "Velora Thai Spa" }],
       },
       twitter: {
         card: "summary_large_image",
         title: "Article Not Found - Velora Thai Spa",
         description: "The requested article could not be found.",
-        images: [`${siteUrl}/assets/hero-spa.jpg`],
+        images: [`${publicBase}/assets/hero-spa.jpg`],
       },
     };
   }
 
-  const image = article.featuredImage?.startsWith("http")
+  const img = article.featuredImage?.startsWith("http")
     ? article.featuredImage
-    : `${siteUrl}${article.featuredImage || "/assets/hero-spa.jpg"}`;
+    : `${publicBase}${article.featuredImage || "/assets/hero-spa.jpg"}`;
 
   return {
     title: `${article.title} - Velora Thai Spa`,
     description: article.excerpt || `Read ${article.title} by ${article.author} at Velora Thai Spa.`,
     keywords: ["wellness", "spa", article.category.name, ...(article.tags ?? []), article.author],
-    alternates: { canonical: url },
+    alternates: { canonical },
     openGraph: {
       title: `${article.title} - Velora Thai Spa`,
       description: article.excerpt || `Read ${article.title} by ${article.author} at Velora Thai Spa.`,
-      url,
+      url: canonical,
       siteName: "Velora Thai Spa",
       type: "article",
-      images: [{ url: image, width: 1200, height: 630, alt: `Article: ${article.title} - Velora Thai Spa` }],
       locale: "en_US",
       authors: [article.author],
       publishedTime: article.publishedAt,
+      images: [{ url: img, width: 1200, height: 630, alt: `Article: ${article.title} - Velora Thai Spa` }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${article.title} - Velora Thai Spa`,
       description: article.excerpt || `Read ${article.title} by ${article.author} at Velora Thai Spa.`,
-      images: [image],
+      images: [img],
     },
   };
 }
 
-// ✅ params is a Promise here too
+
 export default async function Page({ params }: { params: Promise<Params> }) {
-  const { categorySlug, articleSlug } = await params; // <-- await here
-  const article = await fetchArticle(categorySlug, articleSlug);
+  const { categorySlug, articleSlug } = await params;   // ✅ await params
+  const publicBase = process.env.NEXT_PUBLIC_SITE_URL || (await getSiteUrlFromRequest());
+  const article = await fetchArticle(publicBase, categorySlug, articleSlug);
 
   if (!article) {
     return (
