@@ -8,10 +8,16 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const categories = await ArticleCategory.find({ isActive: true }).sort({ order: 1 });
-    res.json(categories);
+    res.json({
+      success: true,
+      data: categories,
+    });
   } catch (error) {
     console.error('Error fetching article categories:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 });
 
@@ -19,10 +25,16 @@ router.get('/', async (req, res) => {
 router.get('/admin', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const categories = await ArticleCategory.find().sort({ order: 1 });
-    res.json(categories);
+    res.json({
+      success: true,
+      data: categories,
+    });
   } catch (error) {
     console.error('Error fetching article categories:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 });
 
@@ -42,12 +54,21 @@ router.get('/:identifier', async (req, res) => {
     }
 
     if (!category) {
-      return res.status(404).json({ message: 'Article category not found' });
+      return res.status(404).json({
+        success: false,
+        message: 'Article category not found'
+      });
     }
-    res.json(category);
+    res.json({
+      success: true,
+      data: category,
+    });
   } catch (error) {
     console.error('Error fetching article category:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 });
 
@@ -59,7 +80,10 @@ router.post('/', async (req, res) => {
     // Check if category already exists
     const existingCategory = await ArticleCategory.findOne({ name });
     if (existingCategory) {
-      return res.status(400).json({ message: 'Article category already exists' });
+      return res.status(400).json({
+        success: false,
+        message: 'Article category already exists'
+      });
     }
 
     // Generate slug from name
@@ -71,7 +95,10 @@ router.post('/', async (req, res) => {
     // Check if slug already exists
     const existingSlug = await ArticleCategory.findOne({ slug });
     if (existingSlug) {
-      return res.status(400).json({ message: 'Article category with this slug already exists' });
+      return res.status(400).json({
+        success: false,
+        message: 'Article category with this slug already exists'
+      });
     }
 
     const category = new ArticleCategory({
@@ -83,10 +110,16 @@ router.post('/', async (req, res) => {
     });
 
     await category.save();
-    res.status(201).json(category);
+    res.status(201).json({
+      success: true,
+      data: category,
+    });
   } catch (error) {
     console.error('Error creating article category:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 });
 
@@ -106,7 +139,10 @@ router.put('/:identifier', async (req, res) => {
     }
 
     if (!category) {
-      return res.status(404).json({ message: 'Article category not found' });
+      return res.status(404).json({
+        success: false,
+        message: 'Article category not found'
+      });
     }
 
     // Generate new slug if name changed
@@ -120,7 +156,10 @@ router.put('/:identifier', async (req, res) => {
       // Check if new slug already exists (but not for this same category)
       const existingSlug = await ArticleCategory.findOne({ slug, _id: { $ne: category._id } });
       if (existingSlug) {
-        return res.status(400).json({ message: 'Article category with this slug already exists' });
+        return res.status(400).json({
+          success: false,
+          message: 'Article category with this slug already exists'
+        });
       }
     }
 
@@ -133,10 +172,16 @@ router.put('/:identifier', async (req, res) => {
     category.isActive = isActive !== undefined ? isActive : category.isActive;
 
     await category.save();
-    res.json(category);
+    res.json({
+      success: true,
+      data: category,
+    });
   } catch (error) {
     console.error('Error updating article category:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 });
 
@@ -149,13 +194,22 @@ router.delete('/:identifier', authenticateToken, requireAdmin, async (req, res) 
     const category = await ArticleCategory.findOneAndDelete({ slug: identifier });
 
     if (!category) {
-      return res.status(404).json({ message: 'Article category not found' });
+      return res.status(404).json({
+        success: false,
+        message: 'Article category not found'
+      });
     }
 
-    res.json({ message: 'Article category deleted successfully' });
+    res.json({
+      success: true,
+      message: 'Article category deleted successfully'
+    });
   } catch (error) {
     console.error('Error deleting article category:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 });
 
@@ -168,10 +222,16 @@ router.put('/order/update', authenticateToken, requireAdmin, async (req, res) =>
       await ArticleCategory.findByIdAndUpdate(cat.id, { order: cat.order });
     }
 
-    res.json({ message: 'Article category order updated successfully' });
+    res.json({
+      success: true,
+      message: 'Article category order updated successfully'
+    });
   } catch (error) {
     console.error('Error updating article category order:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 });
 
