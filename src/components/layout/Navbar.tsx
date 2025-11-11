@@ -47,9 +47,21 @@ export const Navbar = () => {
   useEffect(() => {
     const loadArticleCategories = async () => {
       try {
+        console.log("Loading article categories for navbar...");
         const response = await fetch("/api/article-categories");
         const result = await response.json();
-        if (result && Array.isArray(result)) setArticleCategories(result);
+        console.log("Navbar categories response:", result);
+
+        if (result && result.success && Array.isArray(result.data)) {
+          setArticleCategories(result.data);
+          console.log("Setting navbar categories:", result.data);
+        } else if (Array.isArray(result)) {
+          // Fallback for old format
+          setArticleCategories(result);
+          console.log("Setting navbar categories (fallback):", result);
+        } else {
+          console.error("Unexpected response format:", result);
+        }
       } catch (error) {
         console.error("Failed to load article categories:", error);
       }

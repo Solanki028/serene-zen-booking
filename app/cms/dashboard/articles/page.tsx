@@ -66,33 +66,34 @@ export default function ArticlesManagement() {
 
   const loadData = async () => {
     try {
-      // use same-origin cookies; don't hand craft Authorization header here
-      const [articlesRes, categoriesRes] = await Promise.all([
-        fetch('/api/articles/admin', { credentials: 'include' }),
-        fetch('/api/article-categories/admin', { credentials: 'include' }),
-      ]);
-  
-      // treat HTTP 2xx as success; fall back to .success if present
-      const [articlesData, categoriesData] = await Promise.all([
-        articlesRes.json().catch(() => ({})),
-        categoriesRes.json().catch(() => ({})),
-      ]);
-  
-      if (articlesRes.ok) {
-        setArticles(articlesData?.data ?? []);
-      } else {
-        setArticles([]);
-        console.error('Articles admin fetch failed:', articlesData);
-      }
-  
-      if (categoriesRes.ok) {
-        setCategories(categoriesData?.data ?? []);
+      console.log('Loading data...');
+
+      // Use apiService for consistent authentication and error handling
+      const categoriesRes = await apiService.getArticleCategoriesAdmin();
+      console.log('Categories response:', categoriesRes);
+
+      if (categoriesRes.success) {
+        setCategories(categoriesRes.data ?? []);
+        console.log('Setting categories:', categoriesRes.data);
       } else {
         setCategories([]);
-        console.error('Article-categories admin fetch failed:', categoriesData);
+        console.error('Article-categories fetch failed:', categoriesRes);
+      }
+
+      // Load articles separately
+      const articlesRes = await apiService.getArticles();
+      console.log('Articles response:', articlesRes);
+
+      if (articlesRes.success) {
+        setArticles(articlesRes.data ?? []);
+      } else {
+        setArticles([]);
+        console.error('Articles fetch failed:', articlesRes);
       }
     } catch (error) {
       console.error('Failed to load data:', error);
+      setCategories([]);
+      setArticles([]);
     }
   };
   
